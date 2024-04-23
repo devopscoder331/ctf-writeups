@@ -1,0 +1,9 @@
+uvicorn
+pydantic
+pydantic-settings
+fastapi
+gunicorn
+passlib
+bcrypt==4.0.1
+python-jose[cryptography]
+requests

@@ -1,0 +1,42 @@
+version: '3.2'
+
+services:
+  api:
+    restart: unless-stopped
+    stop_grace_period: 0s
+    image: cutaway-api
+    container_name: cutaway-api
+    build: services/app/
+    command: gunicorn main:app --workers 5 --bind 0.0.0.0:8000 --access-logfile '-' --error-logfile '-' --worker-class uvicorn.workers.UvicornWorker
+    networks:
+      - backend
+    volumes:
+      - ./services/app/database:/code/app/database
+    env_file: .env
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+
+  nginx:
+    restart: unless-stopped
+    build: services/nginx/
+    image: cutaway-nginx
+    container_name: cutaway-nginx
+    ports:
+      - "127.0.0.1:20010:80"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - backend
+    depends_on:
+      - api
+
+networks:
+  backend:
+    name: cutaway-network
+    driver: bridge
