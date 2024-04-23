@@ -1,5 +1,6 @@
 ### Cuteway (Дип-взлом)
 
+Category: medium, web, bypass
 Author: Александр Соколов (@alex_S0k0l0v)
 
 #### Description:
