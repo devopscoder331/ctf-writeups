@@ -93,7 +93,7 @@ Okey, try bypass authication:
 ```
 $ htpasswd -bnBC 10 "" YOUR_PASSWORD | tr -d ':\n'
 
-> 
+> $2y$10$4VJm4VXOBGS26TW7aUAZm.j8lVn56lkRu9U4O6YKK4ctmArbcBRrW
 ```
 
 Inject parameters into the description field to create exploit user:
