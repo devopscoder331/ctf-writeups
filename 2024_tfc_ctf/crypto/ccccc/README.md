@@ -3,7 +3,8 @@
 Points: 50 \
 Difficulty: WARMUP \
 Category: Cryptography \
-Author: hofill
+Author: hofill \
+Solves: 511
 
 ### Description
 

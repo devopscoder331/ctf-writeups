@@ -2,9 +2,9 @@
 
 Points: 50 \
 Difficulty: Warmup \
-Category: Cryptography
-Author: hofill
-Solvers: 366
+Category: Cryptography \
+Author: hofill \
+Solves: 366
 
 ### Description
 I just took a quick look at my DNA. I feel like I was created for this CTF.

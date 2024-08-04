@@ -7,6 +7,7 @@ Author: hofill
 Solvers: 38
 
 ### Description
+
 Are you ready to rotate your way to victory?
 
 ### Screen
