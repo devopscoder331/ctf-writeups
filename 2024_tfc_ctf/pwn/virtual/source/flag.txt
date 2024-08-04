@@ -1,0 +1,3 @@
+TFCCTF{e3fc3dc85a262326d}
+
+^ The following is a fake flag, and its only purpose is to accurately depict the remote environment and the real flag.
