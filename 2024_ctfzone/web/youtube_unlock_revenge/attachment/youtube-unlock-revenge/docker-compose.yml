@@ -1,0 +1,17 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:1.25.4
+    restart: always
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs/cert.key:/cert.key
+      - ./certs/cert.pem:/cert.pem
+    ports:
+      - 80:80
+
+  dpi:
+    build: ./dpi
+    restart: always
+    ports:
+      - 443:443
