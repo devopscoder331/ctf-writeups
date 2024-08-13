@@ -1,0 +1,49 @@
+.instant {
+    position: relative;
+    vertical-align: top;
+    width: 94px;
+    text-align: center;
+    word-wrap: break-word
+}
+
+.small-button {
+    width: 94px;
+    height: 89px;
+    position: absolute;
+    background: url(/static/images/transparent_button_small_sprite.png) no-repeat;
+    background-position: -5px -5px;
+    border: 0;
+    display: block;
+    -webkit-tap-highlight-color: transparent
+}
+
+.small-button-active {
+    background-position: -109px -5px !important;
+}
+
+.small-button-background {
+    width: 86px;
+    height: 84px;
+    margin-top: 3px;
+    margin-left: 3px;
+    position: absolute
+}
+
+.small-button-shadow {
+    width: 94px;
+    height: 89px;
+    margin-bottom: 5px;
+    background: url(/static/images/transparent_button_small_shadow.png) no-repeat
+}
+
+.circle {
+    border-radius: 50%
+}
+
+table {
+    table-layout: fixed;
+    height: 500px;
+}
+td {
+    height: 100px;
+}

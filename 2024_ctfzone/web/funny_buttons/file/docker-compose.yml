@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db:
+    image: redis:latest
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+  app:
+    build: ./app
+    restart: always
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "3000"
+      REDIS_HOST: "db"
+      REDIS_PORT: "6379"
+      SESSION_SECRET: "7d9afd268da56acdf3c25f1e6601994b"
+      FLAG: "CTFZONE{redactedfunnyhere}"
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          
+  nginx:
+    build: nginx/
+    volumes:
+      - ./app/static:/static
+    depends_on:
+      - app
+    ports:
+      - 80:80

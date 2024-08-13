@@ -1,0 +1,196 @@
+<link rel='stylesheet' href='/static/css/button.css'>
+<style>
+    h1 {
+        color: white;
+    }
+</style>
+<script src='/socket.io/socket.io.js'></script>
+<script>
+    const audio_files = [
+        '/static/sounds/movie_1.mp3',
+        '/static/sounds/dry-fart.mp3',
+        '/static/sounds/m-e-o-w.mp3',
+        '/static/sounds/perfect-fart.mp3',
+        '/static/sounds/pew_pew-dknight556-1379997159.mp3',
+        '/static/sounds/discord-notification.mp3',
+        '/static/sounds/goofy-slip.mp3',
+        '/static/sounds/goofy-ahh-runnin.mp3',
+        '/static/sounds/fartmeme.mp3',
+        '/static/sounds/vine-boom-sound-effect_KT89XIq.mp3',
+        '/static/sounds/pew-pew-lame-sound-effect.mp3',
+        '/static/sounds/wrong-answer-sound-effect.mp3',
+        '/static/sounds/punch-gaming-sound-effect-hd_RzlG1GE.mp3',
+        '/static/sounds/puk-v-ekho.mp3',
+        '/static/sounds/yooooooooooooooooooooooooo_4.mp3',
+        '/static/sounds/melee_frying_pan_01.mp3',
+        '/static/sounds/sm64_mario_oof.mp3',
+        '/static/sounds/error_CDOxCYm.mp3',
+        '/static/sounds/steve-old-hurt-sound_XKZxUk4.mp3',
+        '/static/sounds/metal-pipe-clang.mp3',
+        '/static/sounds/windows-10-error-sound.mp3',
+        '/static/sounds/android-notification.mp3',
+        '/static/sounds/discord-leave-noise.mp3',
+        '/static/sounds/honorable-mention-squewe.mp3',
+        '/static/sounds/amogus.mp3',
+    ]
+    const buttons = [
+        { name: 'BRUH', color: '#ffff33' },
+        { name: 'Fart', color: '#663300' },
+        { name: 'M e o w ~', color: '#785578' },
+        { name: 'Fart Button', color: '#339900' },
+        { name: 'Pew_Pew', color: '#000000' },
+
+        { name: 'Discord', color: '#FF0000' },
+        { name: 'goofy slip', color: '#FF640C' },
+        { name: 'goofy ahh', color: '#FF0000' },
+        { name: 'Fart (Better and louder)', color: '#925D34' },
+        { name: 'thud', color: '#FF0000' },
+
+        { name: 'pew', color: '#00ffff' },
+        { name: 'Buzzer', color: '#cc0099' },
+        { name: 'Punch', color: '#2A8DFF' },
+        { name: 'Echo fart', color: '#FFFFFF' },
+        { name: 'YOOOO', color: '#ff0033' },
+
+        { name: 'Frying Pan', color: '#333333' },
+        { name: 'OOF', color: '#33ff00' },
+        { name: 'error', color: '#FF0000' },
+        { name: 'oof', color: '#FF0000' },
+        { name: 'Metal pipe', color: '#5C5C5C' },
+
+        { name: 'Error', color: '#FF0000' },
+        { name: 'notification', color: '#49FF9E' },
+        { name: 'Discord Leave', color: '#6600FF' },
+        { name: 'Honorable Mention', color: '#00F7FF' },
+        { name: 'AMOGUS', color: '#D50000' },
+    ]
+
+    const socket = io();
+    let userInfo = {};
+    let onlineBar = document.getElementById('online');
+
+    function play(btn_id) {
+        socket.emit('button.press', { id: btn_id.split('-')[1]|0 });
+    }
+
+    socket.on('button.press', res => {
+        if (!res?.success)
+            return false;
+
+        let funnyBar = document.getElementById('funny');
+        let btn = document.getElementById(`button-${res.id}`);
+        let tooltip = document.getElementById(`tooltip-${res.id}`);
+
+        if (res.pressed){
+            btn.classList.add('small-button-active');
+            audio_file = audio_files[res.id-1];
+            var audio = new Audio(audio_file);
+            audio.play();
+
+
+            tooltip.setAttribute('title', `pressed by ${res.uname}`);
+            tooltip.setAttribute('data-bs-original-title', `pressed by ${res.uname}`);
+
+            if (funnyBar.value.length){
+                socket.emit('button.set', {id: res.id, funny: funnyBar.value});
+            }
+
+            if (res.uid == userInfo?.uid)
+                socket.emit('button.get', {id: res.id});
+
+        } else {
+            btn.classList.remove('small-button-active');
+            tooltip.setAttribute('title', 'not pressed');
+            tooltip.setAttribute('data-bs-original-title', 'not pressed');
+        }
+    });
+
+    socket.on('button.getAll', res => {
+        if (res?.success){
+            res.buttons.map(button=>{
+                if (button.pressed){
+                    let btn = document.getElementById(`button-${button.id}`);
+                    let tooltip = document.getElementById(`tooltip-${button.id}`);
+                    btn.classList.add('small-button-active');
+                    tooltip.setAttribute('title', `pressed by ${button.uname}`);
+                    tooltip.setAttribute('data-bs-original-title', `pressed by ${button.uname}`);
+                    if (button.uid == userInfo?.uid)
+                        socket.emit('button.get', {id: button.id});
+                }
+            });
+        }
+    });
+
+    socket.on('button.get', res => {
+        if (res?.success){
+            let tooltip = document.getElementById(`tooltip-${res.id}`);
+            let funny = res.funny ? `funny: ${res.funny}` : 'no funny yet';
+            tooltip.setAttribute('title', funny);
+            tooltip.setAttribute('data-bs-original-title', funny);
+        }
+    });
+
+    socket.on('user.getOnline', res => {
+        if (res?.success){
+            onlineBar.textContent = `Online: ${res.count}`
+        }
+    });
+
+    socket.on('user.getInfo', res => {
+        if (res?.success){
+            userInfo = res.info;
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('disconnected');
+    });
+
+    document.addEventListener('DOMContentLoaded', function(event) {
+        for (let i=0; i < buttons.length; i++){
+            let tr = document.getElementById(`tr-${Math.floor(i/5)}`)
+            let td = document.createElement('td');
+            td.innerHTML = `
+                <div class='instant'>
+                    <div class='circle small-button-background' style='background-color:${buttons[i].color};'></div>
+                    <button id='button-${i+1}' class='small-button' onclick='play(this.id)'></button>
+                    <div id='loader-23010' class='loader' style='display: none;'></div>
+                    <div class='small-button-shadow'></div>
+                    <a href='/#' 
+                    class='instant-link link-secondary'
+                    id='tooltip-${i+1}'
+                    data-bs-toggle='tooltip'
+                    data-bs-toggle='right'
+                    title='Not pressed'>${buttons[i].name}</a>
+                </div>
+                `;
+            tr.appendChild(td);
+        }
+
+        socket.on('connect', async () => {
+            console.log('connected:', socket.id);
+            await socket.emit('user.getInfo', { room: 'online_users' });
+            await socket.emit('button.getAll', {});
+            await socket.emit('room.join', { room: 'online_users' });
+
+            setInterval(() => {
+                socket.emit('user.getOnline', {});
+            }, 1500);
+        });
+    });
+
+</script>
+
+<body>
+    <table>
+        <tr id='tr-0'></tr>
+        <tr id='tr-1'></tr>
+        <tr id='tr-2'></tr>
+        <tr id='tr-3'></tr>
+        <tr id='tr-4'></tr>
+    </table>
+    <br/>
+    <div class='w-25'>
+        <input class='form-control' id='funny' placeholder='funny for your button'>
+    </div>
+</body>
