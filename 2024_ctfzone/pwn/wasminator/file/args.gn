@@ -1,0 +1,4 @@
+dcheck_always_on = false
+is_debug = false
+target_cpu = "x64"
+v8_enable_external_code_space = false

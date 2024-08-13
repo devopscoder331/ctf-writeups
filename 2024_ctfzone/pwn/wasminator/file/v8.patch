@@ -1,0 +1,16 @@
+diff --git a/src/objects/objects.cc b/src/objects/objects.cc
+index 71c4b37adcc..0f670bdd7d1 100644
+--- a/src/objects/objects.cc
++++ b/src/objects/objects.cc
+@@ -2228,8 +2228,9 @@ Maybe<bool> Object::SetPropertyInternal(LookupIterator* it,
+       }
+ 
+       case LookupIterator::WASM_OBJECT:
+-        RETURN_FAILURE(it->isolate(), kThrowOnError,
+-                       NewTypeError(MessageTemplate::kWasmObjectsAreOpaque));
++        //RETURN_FAILURE(it->isolate(), kThrowOnError,
++        //               NewTypeError(MessageTemplate::kWasmObjectsAreOpaque));
++        return SetDataProperty(it, value);
+ 
+       case LookupIterator::INTERCEPTOR: {
+         if (it->HolderIsReceiverOrHiddenPrototype()) {
