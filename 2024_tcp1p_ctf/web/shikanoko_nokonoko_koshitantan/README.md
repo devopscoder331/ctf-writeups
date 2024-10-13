@@ -1,7 +1,10 @@
-Shikanoko nokonoko koshitantan!
-281 pts
+### Shikanoko nokonoko koshitantan!
 
-Author: dimas
+
+Points: 281 \
+Category: Web \
+Author: dimas \
+Solves: 9
 
 Shikanoko nokonoko koshitantan
 
@@ -12,6 +15,4 @@ Shikanoko nokonoko koshitantan
 Shikanoko nokonoko koshitantan
 
 (Nun! Nun!)
-
-Connect: http://ctf.tcp1p.team:8547
 
