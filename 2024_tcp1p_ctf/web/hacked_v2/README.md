@@ -1,8 +1,9 @@
-Hacked-V2
-111 pts
+### Hacked-V2
 
+Points: 111 \
+Category: Web \
 Author: daffainfo
+Solves: 23
 
 Well wlll well, the hacker still managed to hack my website, I'm sure this time they won't be able to hack my website
 
-Connect: http://ctf.tcp1p.team:14012
