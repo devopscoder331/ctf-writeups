@@ -1,7 +1,11 @@
-pressword-v2
-836 pts
+### pressword-v2
 
-Author: dimas
+Points: 836 \
+Category: Web \
+Author: dimas \
+Solves 2
+
+### Description
 
 In this challenge we will exploit some vulnerability from php and wordpress, i hope you learn many thing from this challenge :3
 

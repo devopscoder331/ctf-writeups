@@ -5,6 +5,8 @@ Category: Web \
 Author: dimas \
 Solves: 1
 
+### Description
+
 This challenge is the definition of pain!
 
 Web: http://ctf.tcp1p.team:14746 Bot: http://ctf.tcp1p.team:35298
