@@ -1,0 +1,10 @@
+services:
+  breaking_bad:
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    ports:
+      - 31178:9000
+    restart: on-failure
+    pids_limit: 1024
+    mem_limit: 2Gb
