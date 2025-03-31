@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Cloud Storage</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="auth-form">
+      <h1>Login</h1>
+      <div id="error-message" class="error-message"></div>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+          <div class="field-error" id="email-error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+          <div class="field-error" id="password-error"></div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+      
+      <div class="auth-links">
+        <p>Don't have an account? <a href="/register">Register</a></p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Clear previous errors
+      document.getElementById('error-message').textContent = '';
+      document.getElementById('email-error').textContent = '';
+      document.getElementById('password-error').textContent = '';
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          if (data.errors) {
+            // Display field-specific validation errors
+            data.errors.forEach(error => {
+              if (error.path === 'email') {
+                document.getElementById('email-error').textContent = error.msg;
+              } else if (error.path === 'password') {
+                document.getElementById('password-error').textContent = error.msg;
+              } else {
+                document.getElementById('error-message').textContent = error.msg;
+              }
+            });
+          } else {
+            // Display general error
+            document.getElementById('error-message').textContent = data.message || 'Login failed';
+          }
+        }
+      } catch (error) {
+        document.getElementById('error-message').textContent = 'An error occurred. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html> 

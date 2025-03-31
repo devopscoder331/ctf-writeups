@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Cloud Storage</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <h1>Cloud Storage</h1>
+      <div class="user-info">
+        <span id="user-name"></span>
+        <button id="logout-btn" class="btn btn-outline">Logout</button>
+      </div>
+    </header>
+    
+    <div class="dashboard-content">
+      <div class="sidebar">
+        <div class="upload-container">
+          <button id="upload-btn" class="btn btn-primary">Upload File</button>
+          <input type="file" id="file-input" style="display: none;">
+          <div class="field-error" id="file-upload-error"></div>
+          <button id="new-folder-btn" class="btn btn-secondary">New Folder</button>
+        </div>
+        
+        <div class="folder-breadcrumbs">
+          <span id="current-path">Root</span>
+        </div>
+      </div>
+      
+      <div class="main-content">
+        <div id="files-container" class="files-container">
+          <!-- Files and folders will be displayed here -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Folder creation modal -->
+  <div id="folder-modal" class="modal">
+    <div class="modal-content">
+      <h2>Create New Folder</h2>
+      <form id="create-folder-form">
+        <div class="form-group">
+          <label for="folder-name">Folder Name</label>
+          <input type="text" id="folder-name" required>
+          <div class="field-error" id="folder-name-error"></div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancel-folder-btn" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+      <div id="folder-modal-error" class="error-message"></div>
+    </div>
+  </div>
+  
+  <!-- Share File Modal -->
+  <div id="share-modal" class="modal">
+    <div class="modal-content">
+      <h2>Share File</h2>
+      <div id="share-modal-content">
+        <p>Generate a share link for <span id="share-file-name"></span></p>
+        
+        <div class="form-group">
+          <label for="expiry-hours">Link expires after (hours):</label>
+          <input type="number" id="expiry-hours" value="24" min="1" max="168">
+        </div>
+        
+        <div class="share-link-container" id="share-link-container" style="display: none;">
+          <p>Share link (valid for <span id="expiry-time"></span>):</p>
+          <div class="share-link-box">
+            <input type="text" id="share-link" readonly>
+            <button id="copy-link-btn" class="btn btn-outline">Copy</button>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" id="cancel-share-btn" class="btn btn-outline">Cancel</button>
+          <button type="button" id="generate-link-btn" class="btn btn-primary">Generate Link</button>
+          <button type="button" id="revoke-link-btn" class="btn btn-secondary" style="display: none;">Revoke Link</button>
+        </div>
+      </div>
+      <div id="share-modal-error" class="error-message"></div>
+    </div>
+  </div>
+  
+  <script>
+    let currentUser = null;
+    let currentFolderId = null;
+    let folderHistory = [];
+    
+    // Fetch current user
+    async function fetchCurrentUser() {
+      try {
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          currentUser = await response.json();
+          document.getElementById('user-name').textContent = currentUser.name;
+        } else {
+          window.location.href = '/login';
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+        window.location.href = '/login';
+      }
+    }
+    
+    // Fetch files and folders
+    async function fetchItems(folderId = null) {
+      try {
+        let url = '/api/files';
+        if (folderId) {
+          url += `?folderId=${folderId}`;
+        }
+        
+        const response = await fetch(url, {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          const { files, folders } = await response.json();
+          displayItems(files, folders);
+        } else {
+          console.error('Failed to fetch items');
+        }
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      }
+    }
+    
+    // Display files and folders
+    function displayItems(files, folders) {
+      const container = document.getElementById('files-container');
+      container.innerHTML = '';
+      
+      // Display folders first
+      folders.forEach(folder => {
+        const folderElement = document.createElement('div');
+        folderElement.className = 'item folder';
+        folderElement.innerHTML = `
+          <div class="item-icon">📁</div>
+          <div class="item-name">${folder.name}</div>
+          <div class="item-actions">
+            <button class="delete-btn" data-id="${folder._id}" data-type="folder">❌</button>
+          </div>
+        `;
+        
+        folderElement.addEventListener('click', (e) => {
+          if (!e.target.classList.contains('delete-btn')) {
+            navigateToFolder(folder._id, folder.name);
+          }
+        });
+        
+        container.appendChild(folderElement);
+      });
+      
+      // Then display files
+      files.forEach(file => {
+        const fileElement = document.createElement('div');
+        fileElement.className = 'item file';
+        
+        // Determine icon based on mimetype
+        let icon = '📄';
+        if (file.mimetype.startsWith('image/')) icon = '🖼️';
+        else if (file.mimetype === 'application/pdf') icon = '📕';
+        else if (file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') icon = '📝';
+        else if (file.mimetype === 'text/html') icon = '🌐';
+        
+        fileElement.innerHTML = `
+          <div class="item-icon">${icon}</div>
+          <div class="item-name">${file.originalName}</div>
+          <div class="item-actions">
+            <button class="preview-btn" data-id="${file._id}">👁️</button>
+            <button class="share-btn" data-id="${file._id}" data-name="${file.originalName}">🔗</button>
+            <button class="delete-btn" data-id="${file._id}" data-type="file">❌</button>
+          </div>
+        `;
+        
+        container.appendChild(fileElement);
+      });
+      
+      // Add event listeners to delete buttons
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const type = btn.dataset.type;
+          
+          if (confirm(`Are you sure you want to delete this ${type}?`)) {
+            try {
+              const response = await fetch(`/api/files/${type}/${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+              });
+              
+              if (response.ok) {
+                fetchItems(currentFolderId);
+              } else {
+                alert('Failed to delete item');
+              }
+            } catch (error) {
+              console.error('Error deleting item:', error);
+            }
+          }
+        });
+      });
+      
+      // Add event listeners to preview buttons
+      document.querySelectorAll('.preview-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          window.open(`/preview/file/${id}`, '_blank');
+        });
+      });
+    }
+    
+    // Navigate to folder
+    function navigateToFolder(folderId, folderName) {
+      if (currentFolderId) {
+        folderHistory.push({
+          id: currentFolderId,
+          name: document.getElementById('current-path').textContent
+        });
+      }
+      
+      currentFolderId = folderId;
+      document.getElementById('current-path').textContent = folderName;
+      fetchItems(folderId);
+    }
+    
+    // Go back to previous folder
+    function goBack() {
+      if (folderHistory.length === 0) {
+        currentFolderId = null;
+        document.getElementById('current-path').textContent = 'Root';
+        fetchItems();
+        return;
+      }
+      
+      const previousFolder = folderHistory.pop();
+      currentFolderId = previousFolder.id;
+      document.getElementById('current-path').textContent = previousFolder.name;
+      fetchItems(currentFolderId);
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchCurrentUser();
+      fetchItems();
+      
+      // Logout button
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        try {
+          await fetch('/api/auth/logout', {
+            credentials: 'include'
+          });
+          window.location.href = '/login';
+        } catch (error) {
+          console.error('Logout error:', error);
+        }
+      });
+      
+      // Upload file
+      document.getElementById('upload-btn').addEventListener('click', () => {
+        document.getElementById('file-input').click();
+      });
+      
+      document.getElementById('file-input').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Clear previous errors
+        document.getElementById('file-upload-error').textContent = '';
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        if (currentFolderId) {
+          formData.append('folderId', currentFolderId);
+        }
+        
+        try {
+          const response = await fetch('/api/files/upload', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok) {
+            fetchItems(currentFolderId);
+          } else {
+            document.getElementById('file-upload-error').textContent = data.message || 'Upload failed';
+          }
+        } catch (error) {
+          document.getElementById('file-upload-error').textContent = 'An error occurred during upload';
+        }
+        
+        // Reset file input
+        e.target.value = '';
+      });
+      
+      // New folder
+      const folderModal = document.getElementById('folder-modal');
+      
+      document.getElementById('new-folder-btn').addEventListener('click', () => {
+        folderModal.style.display = 'flex';
+      });
+      
+      document.getElementById('cancel-folder-btn').addEventListener('click', () => {
+        folderModal.style.display = 'none';
+      });
+      
+      document.getElementById('create-folder-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Clear previous errors
+        document.getElementById('folder-name-error').textContent = '';
+        document.getElementById('folder-modal-error').textContent = '';
+        
+        const folderName = document.getElementById('folder-name').value;
+        
+        if (!folderName) return;
+        
+        try {
+          const response = await fetch('/api/files/folder', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name: folderName,
+              parentId: currentFolderId
+            }),
+            credentials: 'include'
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok) {
+            fetchItems(currentFolderId);
+            folderModal.style.display = 'none';
+            document.getElementById('folder-name').value = '';
+          } else {
+            if (data.errors) {
+              // Display field-specific validation errors
+              data.errors.forEach(error => {
+                if (error.path === 'name') {
+                  document.getElementById('folder-name-error').textContent = error.msg;
+                } else {
+                  document.getElementById('folder-modal-error').textContent = error.msg;
+                }
+              });
+            } else {
+              // Display general error
+              document.getElementById('folder-modal-error').textContent = data.message || 'Failed to create folder';
+            }
+          }
+        } catch (error) {
+          document.getElementById('folder-modal-error').textContent = 'An error occurred. Please try again.';
+        }
+      });
+      
+      // Breadcrumb navigation
+      document.getElementById('current-path').addEventListener('click', () => {
+        if (currentFolderId) {
+          goBack();
+        }
+      });
+      
+      // Share functionality
+      let currentShareFileId = null;
+      const shareModal = document.getElementById('share-modal');
+      
+      // Show share modal when share button is clicked
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('share-btn')) {
+          e.stopPropagation();
+          const fileId = e.target.dataset.id;
+          const fileName = e.target.dataset.name;
+          
+          currentShareFileId = fileId;
+          document.getElementById('share-file-name').textContent = fileName;
+          document.getElementById('share-link-container').style.display = 'none';
+          document.getElementById('generate-link-btn').style.display = 'inline-block';
+          document.getElementById('revoke-link-btn').style.display = 'none';
+          document.getElementById('share-modal-error').textContent = '';
+          
+          shareModal.style.display = 'flex';
+        }
+      });
+      
+      // Close share modal
+      document.getElementById('cancel-share-btn').addEventListener('click', () => {
+        shareModal.style.display = 'none';
+      });
+      
+      // Generate share link
+      document.getElementById('generate-link-btn').addEventListener('click', async () => {
+        const expiryHours = parseInt(document.getElementById('expiry-hours').value) || 24;
+        
+        try {
+          const response = await fetch(`/api/files/share/${currentShareFileId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ expiryHours }),
+            credentials: 'include'
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok) {
+            document.getElementById('share-link').value = data.shareUrl;
+            
+            // Format expiry date
+            const expiryDate = new Date(data.expiresAt);
+            const formattedDate = expiryDate.toLocaleString();
+            document.getElementById('expiry-time').textContent = formattedDate;
+            
+            // Show share link container and revoke button
+            document.getElementById('share-link-container').style.display = 'block';
+            document.getElementById('generate-link-btn').style.display = 'none';
+            document.getElementById('revoke-link-btn').style.display = 'inline-block';
+          } else {
+            document.getElementById('share-modal-error').textContent = data.message || 'Failed to generate share link';
+          }
+        } catch (error) {
+          document.getElementById('share-modal-error').textContent = 'An error occurred. Please try again.';
+        }
+      });
+      
+      // Copy link to clipboard
+      document.getElementById('copy-link-btn').addEventListener('click', () => {
+        const shareLink = document.getElementById('share-link');
+        shareLink.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        const originalText = document.getElementById('copy-link-btn').textContent;
+        document.getElementById('copy-link-btn').textContent = 'Copied!';
+        setTimeout(() => {
+          document.getElementById('copy-link-btn').textContent = originalText;
+        }, 2000);
+      });
+      
+      // Revoke share link
+      document.getElementById('revoke-link-btn').addEventListener('click', async () => {
+        try {
+          const response = await fetch(`/api/files/share/${currentShareFileId}`, {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok) {
+            // Hide share link container and show generate button
+            document.getElementById('share-link-container').style.display = 'none';
+            document.getElementById('generate-link-btn').style.display = 'inline-block';
+            document.getElementById('revoke-link-btn').style.display = 'none';
+          } else {
+            document.getElementById('share-modal-error').textContent = data.message || 'Failed to revoke share link';
+          }
+        } catch (error) {
+          document.getElementById('share-modal-error').textContent = 'An error occurred. Please try again.';
+        }
+      });
+    });
+  </script>
+</body>
+</html> 

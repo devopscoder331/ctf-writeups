@@ -1,0 +1,33 @@
+services:
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=cloud_storage
+
+  server:
+    build: ./server/
+    ports:
+      - 80:80
+    depends_on:
+      - mongo
+    environment:
+      - MONGODB_URI=mongodb://admin:password@mongo:27017/
+      - SESSION_SECRET=session_secret
+      - PREVIEW_DOMAIN=sbx.localhost
+      - PORT=80
+
+  bot:
+    build: ./bot/
+    ports:
+      - 5444:5444
+    depends_on:
+      - mongo
+    environment:
+      - MONGODB_URI=mongodb://admin:password@mongo:27017/
+      - TASK_URL=http://web-cloud-1.q.2025.volgactf.ru/
+      - PORT=3001
+      - TIMEOUT=10000
+      - FLAG=VolgaCTF{REDACTED}
+      - POW_BITS=28

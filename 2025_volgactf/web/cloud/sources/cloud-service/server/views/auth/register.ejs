@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Cloud Storage</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="auth-form">
+      <h1>Register</h1>
+      <div id="error-message" class="error-message"></div>
+      
+      <form id="register-form">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required>
+          <div class="field-error" id="name-error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+          <div class="field-error" id="email-error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+          <div class="field-error" id="password-error"></div>
+          <small class="help-text">Password must contain at least 6 characters, including uppercase, lowercase and numbers</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+      
+      <div class="auth-links">
+        <p>Already have an account? <a href="/login">Login</a></p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Clear previous errors
+      document.getElementById('error-message').textContent = '';
+      document.getElementById('name-error').textContent = '';
+      document.getElementById('email-error').textContent = '';
+      document.getElementById('password-error').textContent = '';
+      
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, email, password }),
+          credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          if (data.errors) {
+            // Display field-specific validation errors
+            data.errors.forEach(error => {
+              if (error.path === 'name') {
+                document.getElementById('name-error').textContent = error.msg;
+              } else if (error.path === 'email') {
+                document.getElementById('email-error').textContent = error.msg;
+              } else if (error.path === 'password') {
+                document.getElementById('password-error').textContent = error.msg;
+              } else {
+                document.getElementById('error-message').textContent = error.msg;
+              }
+            });
+          } else {
+            // Display general error
+            document.getElementById('error-message').textContent = data.message || 'Registration failed';
+          }
+        }
+      } catch (error) {
+        document.getElementById('error-message').textContent = 'An error occurred. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html> 

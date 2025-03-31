@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Preview - <%= file.originalName %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .preview-container {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      min-height: 300px;
+      width: 100%;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ddd;
+    }
+    
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .preview-header h1 {
+      margin: 0;
+    }
+    
+    .back-btn {
+      padding: 8px 16px;
+      background-color: #f5f5f5;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="preview-header">
+      <h1>Preview: <%= file.originalName %></h1>
+      <a href="/" class="back-btn">Back to Files</a>
+    </div>
+    
+    <div class="preview-container">
+      <% 
+      const fileExt = file.originalName.split('.').pop().toLowerCase();
+      
+      if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) { 
+      %>
+        <img src="/preview/content/<%= file._id %>" alt="<%= file.originalName %>" style="max-width: 100%;">
+      <% } else if (['pdf'].includes(fileExt)) { %>
+        <iframe src="/preview/content/<%= file._id %>" title="<%= file.originalName %>"></iframe>
+      <% } else if (['docx'].includes(fileExt)) { %>
+        <iframe src="/preview/content/<%= file._id %>" sandbox="allow-same-origin" title="<%= file.originalName %>"></iframe>
+      <% } else if (['html', 'htm'].includes(fileExt)) { %>
+        <iframe src="/preview/content/<%= file._id %>" sandbox="allow-same-origin" title="<%= file.originalName %>"></iframe>
+      <% } else { %>
+        <iframe src="/preview/content/<%= file._id %>" title="<%= file.originalName %>"></iframe>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html> 
