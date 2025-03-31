@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Note: {{ note.title }}{% endblock %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-3">Edit Note</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'note_detail' note_id=note.id %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Note
+            </a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.title.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                    <p class="text-muted small">You can use Markdown to format your note.</p>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.description.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Save Changes
+                </button>
+                <a href="{% url 'note_detail' note_id=note.id %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Markdown Help</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Formatting</h6>
+                    <ul>
+                        <li><code>**bold**</code> - <strong>bold</strong></li>
+                        <li><code>*italic*</code> - <em>italic</em></li>
+                        <li><code>~~strikethrough~~</code> - <del>strikethrough</del></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>Lists</h6>
+                    <ul>
+                        <li><code>* Item 1</code> - Bullet list</li>
+                        <li><code>1. Item 1</code> - Numbered list</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

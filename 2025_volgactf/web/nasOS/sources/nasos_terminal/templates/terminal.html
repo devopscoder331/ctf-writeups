@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nasOS Terminal</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="computer">
+        <h2>nasOS Terminal</h2>
+        <div class="terminal-screen">
+            <p id="terminal-text"></p>
+        </div>
+        <form method="POST" action="/terminal">
+            <input type="text" name="address" placeholder="https://www.nasa.gov/" required />
+            <br>
+            <button type="submit">Go</button>
+        </form>
+        <h2>
+            {% if content %}
+            NASA content: {{ content }}
+            {% else %}
+            Please enter an adress.
+            {% endif %}
+        </h2>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

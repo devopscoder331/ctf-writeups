@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}My Notes{% endblock %}
+
+{% block content %}
+    {% load safe_html %}
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="mb-4">Your Notes</h1>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'create_note' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add New Note
+            </a>
+            <a href="{% url 'search_notes' %}" class="btn btn-outline-secondary ms-2">
+                <i class="bi bi-search"></i> Search
+            </a>
+            <a href="?pdf=true" class="btn btn-outline-secondary ms-2" target="_blank">
+                <i class="bi bi-file-pdf"></i> Export to PDF
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            {{user | safe_html}}
+        </div>
+        
+        <div class="col-md-9">
+            <div id="notes-container">
+                <div class="accordion" id="notesAccordion">
+                    {% for note in notes %}
+                        <div class="card mb-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">{{ note.title }}</h5>
+                                <div>
+                                    <a href="{% url 'note_detail' note_id=note.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                    <a href="{% url 'update_note' note_id=note.id %}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_note' note_id=note.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {{ note.description|safe }}
+                                <p class="text-muted mt-2">
+                                    <small>By {{ note.owner.username }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-warning" role="alert">
+                            No notes available. <a href="{% url 'create_note' %}">Create your first note!</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %} 

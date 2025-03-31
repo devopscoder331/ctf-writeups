@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ note.title }}{% endblock %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ note.title }}</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'notes_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Notes
+            </a>
+        </div>
+    </div>
+
+    {% load safe_html %}
+    {{ note | safe_html }}
+
+
+    </div>
+{% endblock %} 

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Your API Token{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<style>
+    .token-card {
+        animation: pulse 2s infinite;
+        background-color: #fff8e1;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+    }
+    
+    .token-box {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        font-family: monospace;
+        font-size: 16px;
+        overflow-x: auto;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card token-card">
+            <div class="card-header bg-warning text-dark text-center">
+                <h4 class="mb-0">⚠️ IMPORTANT: Save Your API Token ⚠️</h4>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="alert alert-danger text-center">
+                    <strong>This is the ONLY time your token will be displayed!</strong><br>
+                    Please save it in a safe place. It cannot be recovered later.
+                </div>
+                
+                <h5 class="mb-3">Your API Token:</h5>
+                <div class="token-box text-center" id="token-value">{{ token }}</div>
+                
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" onclick="copyToken()">
+                        <i class="bi bi-clipboard me-2"></i> Copy Token to Clipboard
+                    </button>
+                </div>
+                
+                <hr>
+                
+                <h5>What is this token used for?</h5>
+                <p>This API token allows applications to authenticate as you when making API requests. Guard it carefully - anyone with this token can access your account's data through the API.</p>
+                
+                <h5>Where should I store it?</h5>
+                <p>Store this token in a secure place like a password manager. Never share it publicly or commit it to version control systems.</p>
+                
+                <div class="text-center mt-4">
+                    <a href="{% url 'login' %}" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle me-2"></i> I've Saved My Token - Continue to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyToken() {
+    var tokenText = document.getElementById('token-value').innerText;
+    navigator.clipboard.writeText(tokenText)
+        .then(() => {
+            alert('Token copied to clipboard!');
+        })
+        .catch(err => {
+            console.error('Failed to copy token: ', err);
+            // Fallback for older browsers
+            var tokenField = document.createElement('textarea');
+            tokenField.value = tokenText;
+            document.body.appendChild(tokenField);
+            tokenField.select();
+            document.execCommand('copy');
+            document.body.removeChild(tokenField);
+            alert('Token copied to clipboard!');
+        });
+}
+</script>
+{% endblock %} 

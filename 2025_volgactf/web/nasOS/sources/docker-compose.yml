@@ -1,0 +1,41 @@
+services:
+  nasos_terminal:
+    build:
+      context: ./nasos_terminal
+    ports:
+      - 8282:8282
+    restart: on-failure
+    command: uvicorn main:app --host 0.0.0.0 --port 8282
+    environment:
+      LOGIN_SECRET_KEY: "i_am_alien"
+      SESSION_SECRET_KEY: "hi_alien_how_are_you?"
+    networks: 
+      default_net:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+  
+  top_secret_panel:
+    build:
+      context: ./top_secret
+    restart: on-failure
+    command: python ./secret.py
+    environment:
+      FLAG: "VolgaCTF{fake_flag_for_cool_guys!}"
+    networks: 
+      default_net:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 2G
+
+networks:
+  default_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/16
+          gateway: 172.16.0.1

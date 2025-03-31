@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Note: {{ note.title }}{% endblock %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-3">Delete Note</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'note_detail' note_id=note.id %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Note
+            </a>
+        </div>
+    </div>
+    
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Confirm Deletion</h5>
+        </div>
+        <div class="card-body">
+            <p class="lead">Are you sure you want to delete the note <strong>"{{ note.title }}"</strong>?</p>
+            <p>This action cannot be undone.</p>
+            
+            <div class="alert alert-warning">
+                <h6>Note Preview:</h6>
+                <div class="mt-2">
+                    {{ note.description|safe|truncatewords_html:30 }}
+                </div>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Yes, Delete Note
+                </button>
+                <a href="{% url 'note_detail' note_id=note.id %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %} 

@@ -1,0 +1,49 @@
+<!-- Start Generation Here -->
+{% extends "base.html" %}
+
+{% block content %}
+    {% load safe_html %}
+    
+    <div class="row">
+        {{user | safe_html}}
+    <div class="col">
+        <h1 class="mb-4">Your Notes</h1>
+        <div id="notes-container" class="mb-4">
+        <div class="accordion" id="notesAccordion">
+            {% for note in notes %}
+                {{note|safe_html}}
+            {% empty %}
+                <div class="alert alert-warning" role="alert">
+                    No notes available.
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <h2 class="mb-3">Add a New Note</h2>
+    <form method="post" id="note-form" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="note-title" class="form-label">Title</label>
+            <input type="text" id="note-title" name="title" class="form-control" placeholder="Title" required>
+        </div>
+        <div class="mb-3">
+            <label for="note-description" class="form-label">Description</label>
+            <textarea id="note-description" name="description" class="form-control" placeholder="Description" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Note</button>
+    </form>
+
+    <script>
+        function toggleNote(noteId) {
+            const note = document.getElementById(`collapse${noteId}`);
+            note.classList.toggle('show');
+        }
+
+        toggleNote({{current_note_id}});
+    </script>
+{% endblock %}
+<!-- End Generation Here -->

@@ -1,0 +1,54 @@
+.auth-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 2rem;
+}
+
+.auth-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    text-align: center;
+}
+
+.auth-body {
+    padding: 2rem;
+}
+
+.auth-footer {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.auth-logo {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.auth-title {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.form-control {
+    padding: 0.75rem 1rem;
+}
+
+.auth-btn {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+
+.auth-link {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.auth-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+} 

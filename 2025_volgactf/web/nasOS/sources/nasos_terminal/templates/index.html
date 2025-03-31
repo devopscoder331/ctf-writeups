@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAS(A) OPERATION SYSTEM</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="computer">
+        <h2>nasOS Terminal</h2>
+        <div class="terminal-screen">
+            <p id="terminal-text"></p>
+        </div>
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="Login" required />
+            <br>
+            <input type="password" name="password" placeholder="Password" required />
+            <br>
+            <button>Enter</button>
+        </form>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

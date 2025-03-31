@@ -1,0 +1,39 @@
+body {
+    background-color: black;
+    color: green;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.computer {
+    width: 80vh;
+    height: 60vh;
+    border: 10px solid gray;
+    padding: 20px;
+    background-color: black;
+    text-align: center;
+    box-shadow: 5px 5px 20px rgba(0, 255, 0, 0.5);
+}
+input {
+    background-color: black;
+    color: green;
+    border: 1px solid green;
+    font-family: monospace;
+    padding: 5px;
+    margin: 5px;
+    width: 80%;
+}
+button {
+    background-color: black;
+    color: green;
+    border: 1px solid green;
+    padding: 5px 10px;
+    font-family: monospace;
+}
+button:hover {
+    background-color: green;
+    color: black;
+}

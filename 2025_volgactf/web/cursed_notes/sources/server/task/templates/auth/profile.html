@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Profile Information</h4>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="text-center mb-4">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px;">
+                        <i class="bi bi-person text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="mt-2">{{ user.username }}</h5>
+                    <p class="text-muted">
+                        <span class="badge {% if user.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                            {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                        
+                        {% if user.is_staff %}
+                            <span class="badge bg-primary ms-1">Staff</span>
+                        {% endif %}
+                        
+                        {% if user.is_superuser %}
+                            <span class="badge bg-warning ms-1">Admin</span>
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <h6 class="border-bottom pb-2 mb-3">Account Details</h6>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Last Login:</strong> {{ user.last_login|date:"F j, Y, g:i a" }}</p>
+                
+                <div class="alert alert-info mt-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Your API token was shown only once after registration for security reasons.
+                    If you've lost your token, please contact an administrator.
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'logout' %}" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </a>
+                <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                    <i class="bi bi-trash me-2"></i>Delete Account
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">My Notes Summary</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-light mb-3">
+                            <div class="card-body text-center">
+                                <h1 class="display-4">{{ user.notes.count }}</h1>
+                                <p class="mb-0">Total Notes</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h1 class="display-4">
+                                    <i class="bi bi-journal-text"></i>
+                                </h1>
+                                <p class="mb-0">
+                                    <a href="{% url 'notes_list' %}" class="btn btn-primary btn-sm">
+                                        View All Notes
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if user.notes.all %}
+                <h5 class="mt-4 mb-3">Recent Notes</h5>
+                <div class="list-group">
+                    {% for note in user.notes.all|slice:":5" %}
+                        <a href="{% url 'note_detail' note_id=note.id %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ note.title }}</h6>
+                            </div>
+                            <p class="mb-1 text-truncate">{{ note.description|striptags }}</p>
+                        </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info mt-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    You don't have any notes yet. 
+                    <a href="{% url 'create_note' %}">Create your first note!</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone. All your data, including notes, will be permanently deleted.
+                </p>
+                <p>Are you sure you want to delete your account?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="get" action="{% url 'delete_account' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-2"></i>Delete My Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Token copy functionality removed as token is no longer shown here -->
+{% endblock %} 

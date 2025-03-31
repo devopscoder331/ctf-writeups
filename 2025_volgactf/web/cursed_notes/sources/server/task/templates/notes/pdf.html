@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes PDF Export</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.5;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .note {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .note-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        .note-content {
+            margin-bottom: 10px;
+        }
+        .note-meta {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            font-style: italic;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Notes Export</h1>
+        <p>Generated on {% now "F j, Y, H:i" %}</p>
+    </div>
+    
+    {% for note in notes %}
+        <div class="note">
+            <div class="note-title">{{ note.title }}</div>
+            <div class="note-content">
+                {{ note.description|safe }}
+            </div>
+            <div class="note-meta">By {{ note.owner.username }}</div>
+        </div>
+    {% empty %}
+        <p>No notes available.</p>
+    {% endfor %}
+    
+    <div class="footer">
+        <p>Notes App - {% now "Y" %}</p>
+    </div>
+</body>
+</html> 
