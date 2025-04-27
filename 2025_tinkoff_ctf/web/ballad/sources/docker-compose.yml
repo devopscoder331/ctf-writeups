@@ -1,0 +1,57 @@
+version: '2.4'
+
+services:
+  caddy:
+    image: caddy:2.7-alpine
+    restart: always
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./web:/srv:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+
+  app:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    environment:
+      SYLLABUS_WEB_PORT: ${SYLLABUS_WEB_PORT:-8080}
+      SYLLABUS_WEB_SECRET_KEY: ${SYLLABUS_WEB_SECRET_KEY}
+      SYLLABUS_DB_HOST: ${SYLLABUS_DB_HOST:-db}
+      SYLLABUS_DB_PORT: ${SYLLABUS_DB_PORT:-5432}
+      SYLLABUS_DB_USER: ${SYLLABUS_DB_USER:-syllabus}
+      SYLLABUS_DB_PASSWORD: ${SYLLABUS_DB_PASSWORD:-syllabus}
+      SYLLABUS_DB_NAME: ${SYLLABUS_DB_NAME:-syllabus}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15.3
+    command: "postgres -c shared_buffers=256MB -c max_connections=200"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${SYLLABUS_DB_NAME:-syllabus}
+      POSTGRES_USER: ${SYLLABUS_DB_USER:-syllabus}
+      POSTGRES_PASSWORD: ${SYLLABUS_DB_PASSWORD:-syllabus}
+      PGUSER: ${SYLLABUS_DB_USER:-syllabus}
+      PGDATABASE: ${SYLLABUS_DB_NAME:-syllabus}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
