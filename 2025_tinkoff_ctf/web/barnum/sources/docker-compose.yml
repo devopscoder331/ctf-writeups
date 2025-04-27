@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    command: redis-server
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - OPENAI_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - VITE_API_URL=/api
+
+  proxy:
+    image: nginx:latest
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./proxy/static:/usr/share/nginx/html/static
+    restart: always
+    stop_grace_period: 0s
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "8080:8080"
+
+volumes:
+  frontend_build:
+    name: frontend_build_${COMPOSE_PROJECT_NAME:-default}
