@@ -1,0 +1,132 @@
+{{template "layout" .}}
+
+{{define "register-content"}}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Регистрация</h3>
+            </div>
+            {{if .Flash}}
+            <div class="alert alert-{{.Flash.Type}} alert-dismissible fade show m-3" role="alert">
+                {{.Flash.Message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {{end}}
+            <div class="card-body">
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Логин</label>
+                        <input type="text" minlength="8" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">Уже есть аккаунт? <a href="/login">Войти</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function handleRegister(event) {
+    event.preventDefault();
+    
+    const formData = {
+        username: document.getElementById('username').value
+    };
+
+    fetch('/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.error || 'Регистрация не удалась');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Create and show modal with credentials
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.innerHTML = `
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Вы успешно зарегистрировались!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-3">Ваш аккаунт успешно создан! Пожалуйста, сохраните эти учетные данные:</p>
+                        <div class="alert alert-info">
+                            <div class="mb-2">
+                                <strong>Логин:</strong> ${data.username}
+                            </div>
+                            <div class="mb-2">
+                                <strong>Пароль:</strong> ${data.password}
+                            </div>
+                            <div>
+                                <strong>ID комнаты:</strong> ${data.room_id}
+                            </div>
+                        </div>
+                        <p class="text-muted small">Пожалуйста, сохраните эти учетные данные перед закрытием этого окна.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Начать вход</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+        
+        // Redirect to login after modal is closed
+        modal.addEventListener('hidden.bs.modal', function() {
+            window.location.href = '/login';
+        });
+    })
+    .catch(error => {
+        // Create and show error modal
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.innerHTML = `
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Регистрация не удалась</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger mb-0">
+                            ${error.message}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+        
+        // Remove modal from DOM after it's hidden
+        modal.addEventListener('hidden.bs.modal', function() {
+            modal.remove();
+        });
+    });
+}
+</script>
+{{end}} 

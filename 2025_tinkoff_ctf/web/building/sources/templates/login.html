@@ -1,0 +1,97 @@
+{{template "layout" .}}
+
+{{define "login-content"}}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Вход</h3>
+            </div>
+            {{if .Flash}}
+            <div class="alert alert-{{.Flash.Type}} alert-dismissible fade show m-3" role="alert">
+                {{.Flash.Message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {{end}}
+            <div class="card-body">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Логин</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">Еще нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function handleLogin(event) {
+    event.preventDefault();
+    
+    const formData = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+    };
+
+    fetch('/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Неправильное имя пользователя или пароль');
+        }
+        return response.json();
+    })
+    .then(data => {
+        window.location.href = '/dashboard';
+    })
+    .catch(error => {
+        // Create and show error modal
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.innerHTML = `
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ошибка входа</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger mb-0">
+                            ${error.message}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+        
+        // Remove modal from DOM after it's hidden
+        modal.addEventListener('hidden.bs.modal', function() {
+            modal.remove();
+        });
+    });
+}
+</script>
+{{end}} 

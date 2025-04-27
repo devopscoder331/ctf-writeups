@@ -1,0 +1,19 @@
+version: '2.4'
+
+services:
+    building:
+        build: 
+            context: .
+            dockerfile: ./Dockerfile.user
+        ports:
+            - "20018:8080"
+        volumes:
+            - "./data/:/app/data/"
+        pids_limit: 50
+        cpus: 2
+        mem_limit: 1024M
+        restart: always
+        stop_grace_period: 0s
+        environment:
+            FLAG: tctf{building}
+            SESSION_SECRET: "secret"

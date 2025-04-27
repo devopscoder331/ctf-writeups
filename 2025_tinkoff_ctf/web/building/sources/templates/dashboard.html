@@ -1,0 +1,279 @@
+{{template "layout" .}}
+
+{{define "dashboard-content"}}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Управление доступом</h2>
+        <hr>
+    </div>
+</div>
+
+<!-- Renter View -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Сотрудники с доступом в комнату</h4>
+                <button class="btn btn-primary btn-sm float-end" onclick="showUploadModal()">Загрузить сотрудников</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Логин</th>
+                                <th>ID карты</th>
+                                <th>Роль</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersList">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Информация о комнате</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>ID комнаты:</strong> <span id="roomNumber"></span></p>
+                <p><strong>Всего сотрудников:</strong> <span id="userCount"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Users Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="uploadForm" onsubmit="return uploadUsers(event)">
+                <div class="modal-header">
+                    <h5 class="modal-title">Загрузить сотрудников</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="fileUpload" class="form-label">Выбрать файл (.csv или .db)</label>
+                        <input type="file" class="form-control" id="fileUpload" accept=".csv,.db" required>
+                        <div class="sample-link"><a target="_blank" href="/sample_csv">Пример файла</a></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <input type="submit" class="btn btn-primary" value="Загрузить">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+const roomId = '{{.User.RoomID}}';
+const currentUserID = '{{.User.ID}}';
+const currentUserRole = '{{.User.RoleID}}';
+    
+// Load initial data based on user role
+document.addEventListener('DOMContentLoaded', function() {
+    loadRoomUsers();
+});
+
+function loadRoomUsers() {
+    loadRoomInfo();
+    fetch(`/api/rooms/${roomId}/users`, {
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(users => {
+        const tbody = document.getElementById('usersList');
+        tbody.innerHTML = users.map(user => `
+            <tr>
+                <td>${user.username}</td>
+                <td>${user.card_id == undefined ? '-' : user.card_id}</td>
+                <td>${getRoleName(user.role_id)}</td>
+                <td>
+                    ${user.role_id === 4 ? `
+                        <button class="btn btn-sm btn-primary" onclick="changeRole(${user.id}, 'manager')">Назначить менеджером</button>
+                    ` : user.role_id === 3 ? `
+                        <button class="btn btn-sm btn-secondary" onclick="changeRole(${user.id}, 'user')">Сделать пользователем</button>
+                    ` : ''}
+                    ${user.id != currentUserID ? `<button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">Удалить</button>` : ''}
+                </td>
+            </tr>
+        `).join('');
+    });
+}
+function showUploadModal() {
+    const modal = new bootstrap.Modal(document.getElementById('uploadModal'));
+    modal.show();
+}
+
+function showErrorModal(message) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ошибка</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger mb-0">
+                        ${message}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+    
+    // Remove modal from DOM after it's hidden
+    modal.addEventListener('hidden.bs.modal', function() {
+        modal.remove();
+    });
+}
+
+function showConfirmModal(title, message, onConfirm) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">${title}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>${message}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-danger" id="confirmButton">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    const bsModal = new bootstrap.Modal(modal);
+    
+    // Set up confirm button handler
+    modal.querySelector('#confirmButton').addEventListener('click', () => {
+        bsModal.hide();
+        onConfirm();
+    });
+    
+    bsModal.show();
+    
+    // Remove modal from DOM after it's hidden
+    modal.addEventListener('hidden.bs.modal', function() {
+        modal.remove();
+    });
+}
+
+function uploadUsers(e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById('fileUpload');
+    const file = fileInput.files[0];
+    if (!file) {
+        showErrorModal('Пожалуйста, выберите файл');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetch(`/api/rooms/${roomId}/users`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        const uploadModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+        uploadModal.hide();
+
+        if (!response.ok) {
+            return response.text().then(message => {
+                throw new Error('Загрузка не удалась: ' + message);
+            });
+        }
+        
+        loadRoomUsers();
+        document.getElementById("uploadForm").reset() 
+    })
+    .catch(error => {
+        const uploadModal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+        uploadModal.hide();
+        showErrorModal(error.message);
+    });
+}
+
+function changeRole(userId, newRole) {
+    fetch(`/api/users/${userId}/change-role`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ new_role: newRole }),
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Не удалось изменить роль');
+        }
+        loadRoomUsers();
+    })
+    .catch(error => {
+        showErrorModal(error.message);
+    });
+}
+
+function deleteUser(userId) {
+    showConfirmModal(
+        'Подтвердить удаление',
+        'Вы уверены, что хотите удалить этого пользователя?',
+        () => {
+            fetch(`/api/users/${userId}/delete`, {
+                method: 'POST',
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Не удалось удалить пользователя');
+                }
+                loadRoomUsers();
+            })
+            .catch(error => {
+                showErrorModal(error.message);
+            });
+        }
+    );
+}
+
+function loadRoomInfo() {
+    
+    fetch(`/api/rooms/${roomId}`, {
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(room => {
+        document.getElementById('roomNumber').textContent = room.id;
+        if (document.getElementById('userCount')) {
+            document.getElementById('userCount').textContent = room.user_count || 0;
+        }
+    });
+}
+</script>
+{{end}} 

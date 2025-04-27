@@ -1,0 +1,56 @@
+{{template "layout" .}}
+
+{{define "admin-content"}}
+<div class="container mt-5">
+    <h1 class="mb-4">Хозяйственный блок</h1>
+    {{ if .Alert }}
+        <div class="alert alert-danger">{{ .Alert }}</div>
+    {{ else }}
+
+    <div class="row">
+        <!-- Total Users Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Всего сотрудников</h5>
+                    <h2 class="card-text">{{ .TotalUsers }}</h2>
+                    <p class="text-muted">Всего сотрудников</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Rooms Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Активные комнаты</h5>
+                    <h2 class="card-text">{{ .TotalRooms }}</h2>
+                    <p class="text-muted">Сейчас в использовании</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Статус системы</h5>
+                    <h2 class="card-text text-success">Онлайн</h2>
+                    <p class="text-muted">Все системы работают</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Последние действия</h5>
+        </div>
+        <div class="card-body">
+            {{ .Flag }}
+        </div>
+    </div>
+    {{ end }}
+</div>
+{{end}} 
