@@ -1,0 +1,25 @@
+services:
+  server:
+    build: ./backend
+    restart: always
+    stop_grace_period: 0s
+  frontend:
+    build: ./frontend
+    restart: always
+    environment:
+      - CI=false
+      - ESLINT_NO_DEV_ERRORS=true
+      - TSC_COMPILE_ON_ERROR=true
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - server
