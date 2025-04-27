@@ -1,0 +1,95 @@
+body {
+  margin: 0;
+  font-family: 'Nunito', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5efe0;
+  background-repeat: repeat;
+  background-size: 200px;
+  background-opacity: 0.2;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.capybara-theme {
+  --capybara-brown: #8B5A2B;
+  --capybara-light-brown: #D2B48C;
+  --capybara-beige: #F5F5DC;
+  --capybara-green: #556B2F;
+  --capybara-water: #5F9EA0;
+}
+
+.box {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(139, 90, 43, 0.2);
+  border: 2px solid #8B5A2B;
+}
+
+.title {
+  color: #8B5A2B;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #556B2F;
+  font-family: 'Nunito', sans-serif;
+}
+
+.button.is-primary {
+  background-color: #5F9EA0;
+  border-color: transparent;
+}
+
+.button.is-primary:hover {
+  background-color: #4A7F80;
+}
+
+.button.is-success {
+  background-color: #556B2F;
+  border-color: transparent;
+}
+
+.button.is-success:hover {
+  background-color: #445624;
+}
+
+.input:focus {
+  border-color: #8B5A2B;
+  box-shadow: 0 0 0 0.125em rgba(139, 90, 43, 0.25);
+}
+
+.capybara-footer {
+  font-size: 0.8rem;
+  color: #8B5A2B;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.capybara-logo {
+  max-width: 150px;
+  margin: 0 auto;
+  display: block;
+}
+
+.capybara-card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.capybara-card:hover {
+  transform: translateY(-5px);
+}
+
+@media (max-width: 768px) {
+  .box {
+    margin: 1rem;
+  }
+}

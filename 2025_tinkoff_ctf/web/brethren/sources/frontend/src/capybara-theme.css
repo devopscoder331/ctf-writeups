@@ -1,0 +1,354 @@
+/* Capybara Theme CSS */
+:root {
+  --capybara-brown: #8B5A2B;
+  --capybara-light-brown: #D2B48C;
+  --capybara-beige: #F5F5DC;
+  --capybara-green: #556B2F;
+  --capybara-water: #5F9EA0;
+  --capybara-mud: #A0522D;
+}
+
+/* Custom Font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
+/* Body Styling */
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f5efe0;
+  /* Background image is now set via JavaScript */
+  background-repeat: repeat;
+  background-size: 200px;
+  background-attachment: fixed;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: -1;
+}
+
+/* App container */
+.capybara-theme {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  flex: 1;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar Styling */
+.navbar {
+  background-color: rgba(245, 239, 224, 0.9) !important;
+  box-shadow: 0 2px 10px rgba(139, 90, 43, 0.2);
+  border-bottom: 2px solid var(--capybara-brown);
+}
+
+.navbar-item:hover {
+  background-color: var(--capybara-beige) !important;
+  color: var(--capybara-brown) !important;
+}
+
+/* Box Styling */
+.box {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(139, 90, 43, 0.2);
+  border: 2px solid var(--capybara-brown);
+  transition: transform 0.3s ease;
+}
+
+.box:hover {
+  transform: translateY(-5px);
+}
+
+/* Typography */
+.title {
+  color: var(--capybara-brown);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: var(--capybara-green);
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Buttons */
+.button.is-primary {
+  background-color: var(--capybara-water);
+  border-color: transparent;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button.is-primary:hover {
+  background-color: #4A7F80;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(95, 158, 160, 0.3);
+}
+
+.button.is-success {
+  background-color: var(--capybara-green);
+  border-color: transparent;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button.is-success:hover {
+  background-color: #445624;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(85, 107, 47, 0.3);
+}
+
+/* Icon Text Styling */
+.icon-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-text .icon {
+  margin-right: 0.5rem;
+}
+
+/* Icon Styling */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.icon svg {
+  height: 1em;
+  width: 1em;
+}
+
+.button .icon {
+  margin-right: 0.5rem;
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.button .icon:first-child:not(:last-child) {
+  margin-right: 0.25em;
+  margin-left: -0.25em;
+}
+
+.button .icon svg {
+  height: 1em;
+  width: 1em;
+}
+
+/* Center alignment for links */
+.has-text-centered a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Form Elements */
+.input, .textarea {
+  border-color: var(--capybara-light-brown);
+  transition: all 0.3s ease;
+  background-color: rgba(245, 242, 235, 0.8);
+  color: var(--capybara-brown);
+}
+
+.input:focus, .textarea:focus {
+  border-color: var(--capybara-brown);
+  box-shadow: 0 0 0 0.125em rgba(139, 90, 43, 0.25);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Custom form styling for Login and Register */
+.login-form .input, 
+.register-form .input {
+  background-color: rgba(245, 242, 235, 0.8);
+  border-radius: 8px;
+  padding: 10px 15px;
+  height: 45px;
+  font-size: 1rem;
+  padding-left: 2.5rem;
+  border-width: 2px;
+  color: var(--capybara-brown);
+  font-family: 'Nunito', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.login-form .input::placeholder, 
+.register-form .input::placeholder {
+  color: rgba(139, 90, 43, 0.5);
+  font-style: italic;
+  font-weight: 500;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+/* Разные цвета для разных типов полей */
+.login-form .input[type="text"]::placeholder, 
+.register-form .input[type="text"]::placeholder {
+  color: rgba(95, 158, 160, 0.7); /* Цвет воды - для имени пользователя */
+}
+
+.login-form .input[type="password"]::placeholder, 
+.register-form .input[type="password"]::placeholder {
+  color: rgba(85, 107, 47, 0.7); /* Зеленый цвет - для пароля */
+}
+
+.register-form .input[type="email"]::placeholder {
+  color: rgba(160, 82, 45, 0.7); /* Коричневый цвет - для email */
+}
+
+.login-form .input:focus, 
+.register-form .input:focus {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: var(--capybara-water);
+  box-shadow: 0 0 0 0.125em rgba(95, 158, 160, 0.25);
+  transform: translateY(-2px);
+}
+
+.login-form .input:focus::placeholder, 
+.register-form .input:focus::placeholder {
+  opacity: 0.3;
+  transform: translateY(-5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover эффект для полей ввода */
+.login-form .input:hover, 
+.register-form .input:hover {
+  border-color: var(--capybara-light-brown);
+  background-color: rgba(250, 247, 240, 0.9);
+}
+
+.login-form .field, 
+.register-form .field {
+  margin-bottom: 1.5rem;
+}
+
+.login-form .label, 
+.register-form .label {
+  color: var(--capybara-brown);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.control.has-icons-left .icon {
+  color: var(--capybara-light-brown);
+  height: 2.5rem;
+}
+
+.control.has-icons-left .input:focus + .icon {
+  color: var(--capybara-brown);
+}
+
+.notification.is-danger {
+  background-color: rgba(241, 70, 104, 0.8);
+  color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Button styling for forms */
+.login-form .button,
+.register-form .button {
+  height: 45px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-form .button:hover,
+.register-form .button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Styling */
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  box-shadow: 0 8px 16px rgba(139, 90, 43, 0.2);
+  border: 2px solid var(--capybara-brown);
+}
+
+.equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.equal-height .card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.equal-height .content {
+  flex-grow: 1;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  background-color: var(--capybara-light-brown);
+  color: white;
+}
+
+.card-footer {
+  background-color: var(--capybara-beige);
+}
+
+/* Footer Styling */
+.footer {
+  border-top: 2px solid var(--capybara-brown);
+}
+
+/* Capybara Logo */
+.capybara-logo {
+  transition: transform 0.3s ease;
+}
+
+.capybara-logo:hover {
+  transform: rotate(5deg);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .box {
+    margin: 1rem;
+  }
+  
+  .navbar-menu.is-active {
+    background-color: rgba(245, 239, 224, 0.95);
+  }
+} 
