@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport repair system</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #cccccc;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #666;
+        }
+        button {
+            background-color: #333333;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #444444;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #1a472a;
+            color: #d4edda;
+            border: 1px solid #2a5a3a;
+        }
+        .error {
+            background-color: #4a1a1a;
+            color: #f8d7da;
+            border: 1px solid #5a2a2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Airport repair system</h1>
+        <form id="repairForm">
+            <div class="form-group">
+                <label for="code">Enter repair code:</label>
+                <input type="text" id="code" name="code" placeholder="Enter the repair code" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('repairForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('code').value;
+            const resultDiv = document.getElementById('result');
+            
+            fetch('/api/repair_panel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: code })
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.style.display = 'block';
+                if (data.message) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = data.message;
+                } else if (data.error) {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = data.error;
+                }
+            })
+            .catch(error => {
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'An error occurred while processing your request.';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html> 

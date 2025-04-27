@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <title>Capybairlines Booking Processing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo-wrapper">
+                <a href="/"><img src="logo.png" alt="Capybairlines" class="logo"></a>
+                <h1>Capybairlines Booking Processing</h1>
+            </div>
+        </div>
+        
+        <div class="ticker-container">
+            <div class="ticker">
+                <div class="ticker-content">
+                    <span>Flight CAP603 to Amsterdam - Sent</span>
+                    <span>Flight CAP606 to Istanbul - Sent</span>
+                    <span>Flight CAP656 to Los Angeles - On Time</span>
+                    <span>Flight CAP657 to Al Bayda - Delayed</span>
+                    <span>Flight CAP777 to Paris - Boarding</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2><i class="fas fa-file-alt"></i> Ticket refund</h2>
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="booking-file"><i class="fas fa-file-upload"></i> Upload refund letter (.docx)</label>
+                        <input type="file" id="booking-file" accept=".docx" required>
+                        <p class="file-info">Please upload a .docx file containing your booking information (max 3MB)</p>
+                    </div>
+                    <p id="booking-error" class="error"></p>
+                    <p id="booking-success" class="success"></p>
+                    <button type="submit">
+                        <span class="button-content">
+                            <i class="fas fa-check-circle"></i> Process
+                        </span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/booking.js"></script>
+</body>
+</html> 

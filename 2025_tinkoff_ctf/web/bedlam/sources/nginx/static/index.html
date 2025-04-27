@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <title>Capybairlines check-in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo-wrapper">
+                <img src="logo.png" alt="Capybairlines" class="logo">
+                <h1>Capybairlines check-in</h1>
+            </div>
+        </div>
+        
+        <div class="ticker-container">
+            <div class="ticker">
+                <div class="ticker-content">
+                    <span>Flight CAP603 to Amsterdam - Departed</span>
+                    <span>Flight CAP606 to Istanbul - Departed</span>
+                    <span>Flight CAP656 to Los Angeles - On Time</span>
+                    <span>Flight CAP657 to Al Bayda - Delayed</span>
+                    <span>Flight CAP777 to Paris - Boarding</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2><i class="fas fa-ticket"></i> Check-in </h2>
+                <form id="boardingPassForm">
+                    <div class="form-group">
+                        <label for="bp-passenger"><i class="fas fa-user"></i> Passenger name</label>
+                        <input type="text" id="bp-passenger" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bp-flight"><i class="fas fa-plane"></i> Flight number</label>
+                        <input type="text" id="bp-flight" required>
+                    </div>
+                    <p id="bp-error" class="error"></p>
+                    <button type="submit">
+                        <span class="button-content">
+                            <i class="fas fa-print"></i> Print boarding pass
+                        </span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-glass-martini"></i> Business lounge</h2>
+                <form id="loungePassForm">
+                    <div class="form-group">
+                        <label for="lounge-passenger"><i class="fas fa-user-tie"></i> Passenger name</label>
+                        <input type="text" id="lounge-passenger" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lounge-guests"><i class="fas fa-users"></i> Number of guests</label>
+                        <input type="number" id="lounge-guests" min="0" value="0" required>
+                    </div>
+                    <p id="lounge-success" class="success"></p>
+                    <button type="submit">
+                        <span class="button-content">
+                            <i class="fas fa-door-open"></i> Enter business lounge
+                        </span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-file-alt"></i> Ticket refund</h2>
+                <p>Upload your refund letter to process your ticket refund.</p>
+                <a href="booking.html" class="button-link">
+                    <button type="button">
+                        <span class="button-content">
+                            <i class="fas fa-file-upload"></i> Go to ticket refund
+                        </span>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

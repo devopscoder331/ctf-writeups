@@ -1,0 +1,16 @@
+{
+    "name": "tctf-printer",
+    "version": "1.0.0",
+    "description": "TCTF Printer",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.21.2",
+        "handlebars": "^4.7.8",
+        "puppeteer": "^24.4.0",
+        "uuid": "^11.1.0"
+    }
+}
