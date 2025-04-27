@@ -1,0 +1,96 @@
+services:
+  kapi-id:
+    build: ./kapi-id
+    init: true
+    ports:
+      - "20021:8081"
+    networks:
+      - app-network
+    volumes:
+      - ./kapi-id:/app:ro
+      - db_password:/run/secrets:ro
+    read_only: true
+    tmpfs:
+      - /tmp:mode=01773
+      - /var/tmp
+      - /run
+    environment:
+      - POSTGRES_HOST=biometric_db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=biometrics
+      - POSTGRES_USER=biometrics_user
+    depends_on:
+      - postgresql
+    pids_limit: 50
+    cpus: 0.5
+    mem_limit: 512M
+    restart: always
+    stop_grace_period: 0s
+    security_opt:
+      - no-new-privileges:true
+
+  postgresql:
+    build: ./postgresql
+    init: true
+    container_name: biometric_db
+    environment:
+      - POSTGRES_DB=biometrics
+      - POSTGRES_USER=biometrics_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    networks:
+      - app-network
+      - biometrics-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - db_password:/run/secrets
+    tmpfs:
+      - /tmp
+      - /var/tmp
+      - /run
+    read_only: false  
+    pids_limit: 50
+    cpus: 0.5
+    mem_limit: 512M
+    restart: always
+    stop_grace_period: 0s
+    security_opt:
+      - no-new-privileges:true
+
+  government-biometrics:
+    build: ./government-biometrics
+    init: true
+    networks:
+      - biometrics-network
+    volumes:
+      - db_password:/run/secrets:ro
+      - ./government-biometrics:/app:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/tmp
+      - /run
+    environment:
+      - POSTGRES_HOST=biometric_db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=biometrics
+      - POSTGRES_USER=biometrics_user
+      - FLAG_PATH=/run/flag.txt
+    depends_on:
+      - postgresql
+    pids_limit: 50
+    cpus: 0.5
+    mem_limit: 512M
+    restart: always
+    stop_grace_period: 0s
+    security_opt:
+      - no-new-privileges:true
+      
+networks:
+  app-network:
+    driver: bridge
+  biometrics-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  db_password: 

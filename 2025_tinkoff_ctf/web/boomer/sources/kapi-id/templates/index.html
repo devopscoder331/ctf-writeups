@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kapi ID - Biometric Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff; /* Light blue background */
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2980b9;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 36px;
+            color: #2980b9;
+            font-weight: bold;
+        }
+        .tagline {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        button {
+            background-color: #2980b9;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        button:hover {
+            background-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+        .info-box {
+            background-color: #eaf7fb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        .link-box {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Kapi ID</div>
+        <h1>Paw Biometric Verification</h1>
+        <p class="tagline">The premier social network for Capybaras worldwide</p>
+        
+        <div class="info-box">
+            <p><strong>Welcome to Kapi ID!</strong> To protect our community and verify your identity, we require a biometric scan of your paw. This helps us ensure that only genuine capybaras join our exciting social network.</p>
+            <p>Submit your paw biometric data in XML format below to verify your account.</p>
+        </div>
+        
+        <div class="form-section">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="xml_content"><strong>Upload Your Paw Biometric Data:</strong></label><br>
+                    <p>Please scan your paw and upload below the XML data from the paw scanner:</p>
+                    <textarea name="xml_content" id="xml_content" placeholder="Paste your XML biometric data here...">{{ xml_content }}</textarea>
+                </div>
+                <button type="submit">Verify My Identity</button>
+            </form>
+        </div>
+
+        {% if conversion_result %}
+        <div class="result">
+            <h3>Verification Results:</h3>
+            <pre>{{ conversion_result }}</pre>
+            <p>Your biometric data has been securely submitted for account verification. Welcome to Kapi ID!</p>
+        </div>
+        {% endif %}
+
+        {% if saved_data %}
+        <div class="result">
+            <h3>Previous Verification Attempt:</h3>
+            <pre>{{ saved_data }}</pre>
+        </div>
+        {% endif %}
+
+        <div class="link-box">
+            <p>Don't know the proper format? <a href="/example">View Example XML Format</a></p>
+            <p><small>Kapi ID is committed to protecting your privacy. Biometric data is used only for verification purposes and is not stored.</small></p>
+        </div>
+    </div>
+</body>
+</html> 

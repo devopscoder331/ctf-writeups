@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapi ID - Biometric Format Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 36px;
+            color: #2980b9;
+            font-weight: bold;
+        }
+        h1 {
+            color: #2980b9;
+            text-align: center;
+            margin-top: 0;
+        }
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background-color: #f9f9f9;
+        }
+        .info-card {
+            background-color: #eaf7fb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        pre {
+            background-color: #f0f9ff;
+            padding: 18px;
+            border-radius: 6px;
+            overflow-x: auto;
+            border-left: 4px solid #3498db;
+            font-size: 14px;
+        }
+        .back-link {
+            margin-top: 25px;
+            text-align: center;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .note {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Kapi ID</div>
+        <h1>Paw Biometric Data Format</h1>
+        
+        <div class="info-card">
+            <p><strong>How to Submit Your Paw Biometrics</strong></p>
+            <p>For verification on Kapi ID, we need standardized paw biometric data. Please use the format shown below when submitting your paw scan.</p>
+        </div>
+        
+        <div class="card">
+            <h2>XML Format Example</h2>
+            <p>Please verify that your paw scanner outputs the biometric data in the following format:</p>
+            <pre>{{ example_xml }}</pre>
+            
+            <div class="note">
+                <p>The paw_id should be unique and follow the KBV-YEAR-### format.</p>
+                <p>The species field must correctly identify you as "Hydrochoerus hydrochaeris".</p>
+                <p>Measurements should be taken according to Kapibarovsk official standards.</p>
+            </div>
+            
+            <p class="back-link"><a href="/">Return to Verification Page</a></p>
+        </div>
+    </div>
+</body>
+</html> 
