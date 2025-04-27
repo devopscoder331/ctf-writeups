@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  back:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    command: gunicorn -k gevent -w 16 -b :80 app:app
+    restart: always
+    stop_grace_period: 0s
+    read_only: true
+    tmpfs:
+      - /tmp
+    ports:
+      - "80:80"
