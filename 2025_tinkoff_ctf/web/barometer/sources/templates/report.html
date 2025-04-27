@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <h2 style="margin: 0;">Weather Report</h2>
+            <div style="margin-top: 0.5rem;">
+                <span style="font-size: 1.1rem; color: var(--primary-color); font-weight: 500;">By {{ report.username }}</span>
+                <br>
+                <small style="color: #666;">{{ report.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </div>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn" style="background: rgba(139, 69, 19, 0.1); color: var(--primary-color);">
+            Back to Reports
+        </a>
+    </div>
+
+    <div style="margin-top: 2rem; padding: 2rem; background: rgba(222, 184, 135, 0.1); border-radius: 12px;">
+        <div style="display: flex; justify-content: center; gap: 3rem; margin-bottom: 2rem;">
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                    {% if report.temperature < 0 %}
+                        <span class="weather-icon">❄️</span>
+                        <span style="color: #2196F3;">{{ report.temperature }}°C</span>
+                    {% elif report.temperature < 15 %}
+                        <span class="weather-icon">🌱</span>
+                        <span style="color: #4CAF50;">{{ report.temperature }}°C</span>
+                    {% elif report.temperature < 25 %}
+                        <span class="weather-icon">☀️</span>
+                        <span style="color: #FF9800;">{{ report.temperature }}°C</span>
+                    {% else %}
+                        <span class="weather-icon">🔥</span>
+                        <span style="color: #F44336;">{{ report.temperature }}°C</span>
+                    {% endif %}
+                </div>
+                <div style="margin-top: 0.5rem; font-weight: 500;">Temperature</div>
+            </div>
+
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                    {% if report.humidity < 30 %}
+                        <span class="weather-icon">🌵</span>
+                        <span style="color: #795548;">{{ report.humidity }}%</span>
+                    {% elif report.humidity < 60 %}
+                        <span class="weather-icon">🌿</span>
+                        <span style="color: #4CAF50;">{{ report.humidity }}%</span>
+                    {% else %}
+                        <span class="weather-icon">🌧️</span>
+                        <span style="color: #2196F3;">{{ report.humidity }}%</span>
+                    {% endif %}
+                </div>
+                <div style="margin-top: 0.5rem; font-weight: 500;">Humidity</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <h3 style="margin-bottom: 1rem;">Description</h3>
+            <p id="description-container" style="font-size: 1.2rem; line-height: 1.6; white-space: pre-wrap;">Loading description...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const slug = window.location.pathname.split('/').pop();
+        fetch(`/api/report_description/${slug}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch description');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('description-container').textContent = data.description;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('description-container').textContent = 'Error loading description.';
+            });
+    });
+</script>
+{% endblock %} 

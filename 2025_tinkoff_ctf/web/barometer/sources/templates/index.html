@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 2rem;">
+    <h2>Add New Weather Report</h2>
+    <form id="weatherForm" class="form-group">
+        <div class="form-group">
+            <label for="temperature" class="form-label">Temperature (°C) 🌡️</label>
+            <div class="input-group">
+                <span class="input-group-text">°C</span>
+                <input type="text" id="temperature" name="temperature" class="form-control" required
+                       pattern="-?\d*[.,]?\d*"
+                       inputmode="decimal"
+                       placeholder="Enter temperature">
+            </div>
+            <small class="form-text">Enter temperature between -273.15°C and 100°C (use either . or , for decimals)</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="humidity" class="form-label">Humidity (%) 💧</label>
+            <div class="input-group">
+                <span class="input-group-text">%</span>
+                <input type="number" min="0" max="100" id="humidity" name="humidity" class="form-control" required
+                       placeholder="Enter humidity">
+            </div>
+            <small class="form-text">Enter humidity between 0% and 100%</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="description" class="form-label">Description 📝</label>
+            <textarea id="description" name="description" class="form-control" rows="3" required
+                      maxlength="500" placeholder="Describe the weather conditions..."></textarea>
+            <small class="form-text">Maximum 500 characters</small>
+        </div>
+        
+        <div id="error-message" class="alert alert-error" style="display: none;"></div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button type="submit" class="btn">Submit Report ✨</button>
+        </div>
+    </form>
+</div>
+
+<h2>Recent Weather Reports</h2>
+<div id="reports-container">
+    {% for report in reports %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="margin: 0;">{{ report.username }}</h3>
+                <small style="color: #666;">{{ report.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; justify-content: flex-end;">
+                    {% if report.temperature < 0 %}
+                        <span class="weather-icon">❄️</span>
+                        <span style="color: #2196F3;">{{ report.temperature }}°C</span>
+                    {% elif report.temperature < 15 %}
+                        <span class="weather-icon">🌱</span>
+                        <span style="color: #4CAF50;">{{ report.temperature }}°C</span>
+                    {% elif report.temperature < 25 %}
+                        <span class="weather-icon">☀️</span>
+                        <span style="color: #FF9800;">{{ report.temperature }}°C</span>
+                    {% else %}
+                        <span class="weather-icon">🔥</span>
+                        <span style="color: #F44336;">{{ report.temperature }}°C</span>
+                    {% endif %}
+                </div>
+                <div style="font-size: 1.2rem; display: flex; align-items: center; justify-content: flex-end;">
+                    {% if report.humidity < 30 %}
+                        <span class="weather-icon">🌵</span>
+                        <span style="color: #795548;">{{ report.humidity }}%</span>
+                    {% elif report.humidity < 60 %}
+                        <span class="weather-icon">🌿</span>
+                        <span style="color: #4CAF50;">{{ report.humidity }}%</span>
+                    {% else %}
+                        <span class="weather-icon">🌧️</span>
+                        <span style="color: #2196F3;">{{ report.humidity }}%</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 152, 0, 0.2);">
+            <span class="weather-icon">📝</span> 
+            <a href="{{ url_for('view_report', slug=report.slug) }}" style="color: var(--text-color); text-decoration: none; display: inline-block;">
+                {{ report.description }}
+                <span style="color: var(--primary-color); margin-left: 0.5rem; font-weight: 500;">Read more →</span>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+    <span class="pagination-info">
+        Showing {{ (current_page - 1) * per_page + 1 }}-{{ min(current_page * per_page, total_reports) }} of {{ total_reports }} reports
+    </span>
+    
+    <a href="{{ url_for('index', page=1) }}" class="pagination-button" {% if current_page == 1 %}disabled{% endif %}>
+        First
+    </a>
+    
+    <a href="{{ url_for('index', page=current_page-1) }}" class="pagination-button" {% if current_page == 1 %}disabled{% endif %}>
+        Previous
+    </a>
+    
+    {% for page in range(max(1, current_page-2), min(total_pages+1, current_page+3)) %}
+        <a href="{{ url_for('index', page=page) }}" class="pagination-button {% if page == current_page %}active{% endif %}">
+            {{ page }}
+        </a>
+    {% endfor %}
+    
+    <a href="{{ url_for('index', page=current_page+1) }}" class="pagination-button" {% if current_page == total_pages %}disabled{% endif %}>
+        Next
+    </a>
+    
+    <a href="{{ url_for('index', page=total_pages) }}" class="pagination-button" {% if current_page == total_pages %}disabled{% endif %}>
+        Last
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    const errorMessage = $('#error-message');
+    
+    function showError(message) {
+        errorMessage.text(message).show();
+    }
+    
+    function hideError() {
+        errorMessage.hide();
+    }
+    
+    function parseLocalizedNumber(value) {
+        // Replace comma with period for parsing
+        return parseFloat(value.replace(',', '.'));
+    }
+    
+    $('#weatherForm').on('submit', function(e) {
+        e.preventDefault();
+        hideError();
+        
+        const temperatureInput = $('#temperature').val().trim();
+        const temperature = parseLocalizedNumber(temperatureInput);
+        const humidity = parseInt($('#humidity').val());
+        const description = $('#description').val().trim();
+        
+        // Frontend validation
+        if (isNaN(temperature)) {
+            showError('Please enter a valid temperature number');
+            return;
+        }
+        
+        if (temperature < -273.15 || temperature > 100) {
+            showError('Temperature must be between -273.15°C and 100°C');
+            return;
+        }
+        
+        if (humidity < 0 || humidity > 100) {
+            showError('Humidity must be between 0% and 100%');
+            return;
+        }
+        
+        if (!description) {
+            showError('Description is required');
+            return;
+        }
+        
+        if (description.length > 500) {
+            showError('Description is too long (maximum 500 characters)');
+            return;
+        }
+        
+        const formData = {
+            temperature: temperature,
+            humidity: humidity,
+            description: description
+        };
+        
+        $.ajax({
+            url: '{{ url_for("add_report") }}',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                if (response.slug) {
+                    window.location.href = '{{ url_for("view_report", slug="_SLUG_") }}'.replace('_SLUG_', response.slug);
+                } else {
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    const errors = Array.isArray(xhr.responseJSON.error) 
+                        ? xhr.responseJSON.error.join('\n')
+                        : xhr.responseJSON.error;
+                    showError(errors);
+                } else {
+                    showError('Error adding report. Please try again.');
+                }
+            }
+        });
+    });
+    
+    $('#temperature').on('input', function(e) {
+        const value = e.target.value;
+        if (!/^-?\d*[.,]?\d*$/.test(value)) {
+            e.target.value = value.replace(/[^\d.,-]/g, '');
+        }
+        hideError();
+    });
+    
+    $('#humidity, #description').on('input', function() {
+        hideError();
+    });
+});
+</script>
+{% endblock %} 

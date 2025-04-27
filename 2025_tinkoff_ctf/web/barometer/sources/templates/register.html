@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="max-width: 400px; margin: 2rem auto;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Register for CapyWeather</h2>
+    <form method="POST" action="{{ url_for('register') }}">
+        <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" class="form-control" required
+                   placeholder="Choose a username"
+                   minlength="9" maxlength="50">
+            <small class="form-text">Username must be between 9 and 50 characters</small>
+        </div>
+        <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required
+                   placeholder="Choose a password"
+                   minlength="9">
+            <small class="form-text">Password must be at least 9 characters long</small>
+        </div>
+        <div style="text-align: center; margin-top: 2rem;">
+            <button type="submit" class="btn">Register</button>
+        </div>
+    </form>
+    <div style="text-align: center; margin-top: 1.5rem;">
+        <p style="color: var(--text-color);">Already have an account? <a href="{{ url_for('login') }}" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">Login here</a></p>
+    </div>
+</div>
+{% endblock %} 
