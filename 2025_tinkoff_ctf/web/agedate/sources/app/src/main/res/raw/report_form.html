@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1.0">
+        <title>Заявление о жалобе на пользователя</title>
+        <style>
+            @page {
+                size: A4;
+                margin: 2cm;
+            }
+            body {
+                font-family: "Serif", "Georgia", serif;
+                font-size: 10pt;
+                line-height: 1.5;
+                max-width: 210mm;
+                margin: 0 auto;
+                padding: 0;
+                color: #000;
+            }
+            p {
+                line-height: 1.2;
+            }
+            .document {
+                position: relative;
+            }
+            .header-container {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 40px;
+            }
+            .qr-code {
+                width: 200px;
+                height: 200px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .qr-code > img {
+                width: 200px;
+                height: 200px;
+            }
+            .recipient-info {
+                width: 50%;
+                text-align: right;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .title {
+                font-size: 16pt;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+            .underline {
+                border-bottom: 1px solid #000;
+                display: inline-block;
+                min-width: 250px;
+                padding-bottom: 5px;
+                min-height: 20px;
+                position: relative;
+                top: 0;
+            }
+            .wide-underline {
+                min-width: 300px;
+            }
+            .complaint-body {
+                text-align: justify;
+                margin-bottom: 30px;
+            }
+            .checkbox-container {
+                margin: 10px 0;
+            }
+            .checkbox {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border: 1px solid #000;
+                margin-right: 10px;
+                vertical-align: middle;
+            }
+            .checkbox.checked {
+                background-color: transparent;
+                position: relative;
+            }
+            .checkbox.checked::after {
+                content: "×";
+                color: black;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 15px;
+                font-weight: bold;
+                line-height: 1;
+            }
+            .signature {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 50px;
+            }
+            .signature-item {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .signature-field {
+                margin-top: 5px;
+            }
+            .indent {
+                margin-left: 40px;
+            }
+            .warning {
+                margin: 30px 0;
+                font-style: italic;
+            }
+            .other-input {
+                margin-left: 10px;
+                display: inline-block;
+                min-width: 350px;
+            }
+            .small-label {
+                font-size: 10pt;
+            }
+            .filled-text {
+                position: relative;
+                top: 0;
+                font-family: "Arial", sans-serif;
+                font-weight: normal;
+                font-size: 12pt;
+                text-align: center;
+                display: inline-block;
+                width: 100%;
+            }
+            .placeholder {
+                line-height: 1.2;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="document">
+            <div class="header-container">
+                <div class="qr-code">
+                    <img
+                            src="{{qr_image}}"
+                            alt="QR-код для отслеживания заявления" />
+                </div>
+                <div class="recipient-info">
+                    <div>Администрации сервиса</div>
+                    <div>127001, г. Капибаровск,</div>
+                    <div>ул. Пользовательская, д. 404</div>
+                    <div style="margin-top: 15px;">от владельца анкеты сервиса</div>
+                    <div>
+                        <span
+                                class="underline"
+                                id="complainant-full-name">
+                            <span
+                                    class="filled-text"
+                                    style="text-align: right; margin-top: 5px; margin-bottom: -2px;">
+                                {{last_name}} {{first_name}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="title">ЗАЯВЛЕНИЕ</div>
+                <div>о жалобе на владельца анкеты сервиса</div>
+            </div>
+
+            <div class="complaint-body">
+                <div style="display: flex;">Я,
+                    <span
+                            class="underline placeholder"
+                            style="flex: 1;"
+                            id="complainant-full-name-repeat">
+                        <span class="filled-text">{{last_name}} {{first_name}}</span>
+                    </span>
+                    <span style="top: 5pt; position: relative; margin-left: 2px">,</span>
+                </div>
+                <br>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>
+                        "
+                        <span
+                                class="underline placeholder"
+                                style="min-width: 80px;"
+                                id="complainant-birth-day">
+                            <span class="filled-text">{{birth_day}}</span>
+                        </span>
+                        "
+                    </span>
+                    <span
+                            class="underline placeholder"
+                            style="min-width: 140px;"
+                            id="complainant-birth-month">
+                        <span class="filled-text">{{birth_month}}</span>
+                    </span>
+                    <span
+                            class="underline placeholder"
+                            style="min-width: 60px;"
+                            id="complainant-birth-year">
+                        <span class="filled-text">{{birth_year}}</span>
+                    </span>
+                    года рождения, пользователь с ID анкеты
+                </div>
+                <div style="display: flex; margin-top: 10pt">
+                    <span
+                            class="underline placeholder"
+                            style="display: inline-block; flex: 1"
+                            id="complainant-id">
+                        <span class="filled-text placeholder">{{my_profile_id}}</span>
+                    </span>
+                    <span style="top: 5pt; position: relative; margin-left: 2px">,</span>
+                </div>
+                <p style="line-height: 1.5;">
+                    настоящим уведомляю администрацию сервиса о нарушении правил пользования
+                    сервисом со стороны пользователя
+                </p>
+                <div style="display: flex;">
+                    <span
+                            class="underline placeholder"
+                            style="flex: 1"
+                            id="reported-user-name">
+                        <span class="filled-text">{{reported_first_name}} {{reported_last_name}}
+                        </span>
+                    </span>
+                    <span style="top: 5pt; position: relative; margin-left: 2px">,</span>
+                </div>
+                <br>
+                <div style="display: flex;">
+                    <span style="margin-right: 10px">с ID анкеты</span>
+                    <span
+                            class="underline placeholder"
+                            style="flex: 1"
+                            id="reported-user-id">
+                        <span class="filled-text">{{reported_id}}</span>
+                    </span>
+                    <span style="top: 5pt; position: relative; margin-left: 2px">.</span>
+                </div>
+
+                <p style="line-height: 1.5;">Прошу рассмотреть данное заявление и принять
+                    соответствующие меры в отношении вышеуказанного пользователя на основании
+                    следующего нарушения (отметить нужное):
+                </p>
+
+                <div class="indent">
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_1}}"
+                                id="reason-1"></span>
+                        Распространение контента, содержащего ненормативную лексику
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_2}}"
+                                id="reason-2"></span>
+                        Публикация материалов, нарушающих авторские права
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_3}}"
+                                id="reason-3"></span>
+                        Распространение ложной информации
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_4}}"
+                                id="reason-4"></span>
+                        Оскорбление других пользователей
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_5}}"
+                                id="reason-5"></span>
+                        Спам и нежелательная реклама
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_6}}"
+                                id="reason-6"></span>
+                        Мошенничество или попытка обмана
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_7}}"
+                                id="reason-7"></span>
+                        Угрозы и запугивание
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_8}}"
+                                id="reason-8"></span>
+                        Пропаганда насилия или противоправных действий
+                    </div>
+                    <div class="checkbox-container">
+                        <span
+                                class="checkbox{{reason_9}}"
+                                id="reason-9"></span>
+                        Нарушение политики конфиденциальности
+                    </div>
+                    <div
+                            class="checkbox-container"
+                            style="margin-top: -5px;">
+                        <span
+                                class="checkbox"
+                                id="reason-other"></span>
+                        Другое:
+                        <span
+                                class="underline other-input"
+                                style="position: relative; top: 4pt; margin-left: 5px"></span>
+                    </div>
+                </div>
+                <br>
+                <br>
+
+                <p style="margin-bottom: 0; line-height: 2;">
+                    Обоснование жалобы и описание нарушения (укажите дату, время и обстоятельства
+                    нарушения):
+                </p>
+                <p
+                        class="underline"
+                        style="min-height: 40px; width: 100%;"></p>
+                <p
+                        class="underline"
+                        style="min-height: 20px; width: 100%;"></p>
+                <p
+                        class="underline"
+                        style="min-height: 20px; width: 100%;"></p>
+
+                <div class="warning">
+                    Настоящим подтверждаю, что я ознакомлен(а) с правилами обработки заявлений
+                    компанией и осознаю возможные последствия в случае предоставления заведомо
+                    ложной информации. Мне известно, что предоставление недостоверных сведений может
+                    привести к временному или постоянному ограничению доступа к анкете.
+                </div>
+
+                <p style="line-height: 2">
+                    Приложения (если есть, перечислите документы, скриншоты и другие доказательства
+                    нарушения):
+                </p>
+                <p
+                        class="underline"
+                        style="min-height: 20px; width: 100%;">
+                    <span
+                            class="filled-text"
+                            style="text-align: left; padding: 5px 10px;"></span>
+                </p>
+                <p
+                        class="underline"
+                        style="min-height: 20px; width: 100%;"></p>
+
+                <div
+                        class="signature"
+                        style="justify-content: space-between; margin-top: 50px;">
+                    <div
+                            class="signature-item"
+                            style="flex-direction: column; width: 30%; align-items: flex-start;">
+                        <div
+                                class="underline signature-field"
+                                style="min-width: 150px;">
+                            <span class="filled-text">{{date}}</span>
+                        </div>
+                        <div style="font-style: italic; text-align: center; font-size: 10pt; margin-top: -5px; width: 150px;">
+                            (дата)
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; width: 65%;">
+                        <div
+                                class="signature-item"
+                                style="flex-direction: column; margin-right: 15px;">
+                            <div
+                                    class="underline signature-field"
+                                    style="min-width: 120px;">
+                                <div style="min-height: 18pt;"></div>
+                            </div>
+                            <div style="font-style: italic; text-align: center; font-size: 10pt; margin-top: -5px;">
+                                (подпись)
+                            </div>
+                        </div>
+
+                        <div
+                                class="signature-item"
+                                style="flex-direction: column;">
+                            <div
+                                    class="underline signature-field"
+                                    style="min-width: 200px;">
+                                <span class="filled-text">{{last_name}} {{first_name_short}}.</span>
+                            </div>
+                            <div style="font-style: italic; text-align: center; font-size: 10pt; margin-top: -5px;">
+                                (расшифровка подписи)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
