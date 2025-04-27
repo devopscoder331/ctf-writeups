@@ -1,0 +1,23 @@
+services:
+  app:
+    build: .
+    restart: always
+    env_file:
+      - .env
+
+  caddy:
+    image: caddy:2
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./static:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  caddy_data:
+  caddy_config: 

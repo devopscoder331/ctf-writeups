@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Капаре</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="grey lighten-4">
+    <nav class="teal darken-2">
+        <div class="nav-wrapper container">
+            <a href="/" class="brand-logo">Капаре</a>
+            <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul id="nav-desktop" class="right hide-on-med-and-down">
+                <li><a href="/">Главная</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <ul id="mobile-nav" class="sidenav">
+        <li><a href="/">Главная</a></li>
+    </ul>
+    
+    <main class="container">
+        <!-- App content will be loaded here -->
+        <div id="app"></div>
+    </main>
+    
+    <!-- Templates -->
+    <script type="text/template" id="home-template">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="header center teal-text">Добро пожаловать в Капаре</h1>
+                <div class="row center">
+                    <h5 class="header col s12 light">Забронируйте билеты на лучшие театральные представления</h5>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" id="plays-list">
+            <!-- Plays will be loaded here -->
+        </div>
+    </script>
+    
+    <script type="text/template" id="play-card-template">
+        <div class="col s12 m6">
+            <div class="card">
+                <div class="card-image">
+                    <img src="{{image}}" alt="{{title}}">
+                    <span class="card-title">{{title}}</span>
+                </div>
+                <div class="card-content">
+                    <p>{{description}}</p>
+                </div>
+                <div class="card-action">
+                    <a href="#book/{{id}}" class="btn waves-effect waves-light teal">Забронировать билет</a>
+                </div>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="book-template">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="header center teal-text">Забронировать билет</h1>
+                <div class="row center">
+                    <h5 class="header col s12 light">{{title}}</h5>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{{image}}" alt="{{title}}">
+                        <span class="card-title">{{title}}</span>
+                    </div>
+                    <div class="card-content">
+                        <p>{{description}}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">Забронировать билет</span>
+                        <form id="booking-form">
+                            <input type="hidden" id="play-id" value="{{id}}">
+                            
+                            <div class="input-field">
+                                <input id="name" type="text" class="validate" required>
+                                <label for="name">Ваше имя</label>
+                            </div>
+                            
+                            <div class="input-field">
+                                <input id="age" type="number" class="validate" min="0" max="120" required>
+                                <label for="age">Ваш возраст</label>
+                            </div>
+                            
+                            <div class="input-field">
+                                <textarea id="comment" class="materialize-textarea"></textarea>
+                                <label for="comment">Комментарий (необязательно)</label>
+                            </div>
+                            
+                            <button class="btn waves-effect waves-light teal" type="submit">
+                                Забронировать
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ticket-result" class="row" style="display: none;">
+            <div class="col s12">
+                <div class="card teal lighten-5">
+                    <div class="card-content">
+                        <span class="card-title">Билет успешно забронирован!</span>
+                        <p>Ваш билет был забронирован. Вы можете просмотреть его, используя ссылку ниже:</p>
+                        <div class="input-field">
+                            <div class="ticket-url-container">
+                                <a id="ticket-url-link" href="#" class="teal-text"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a id="view-ticket-link" href="#" class="btn waves-effect waves-light teal">Просмотреть билет</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="ticket-template">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="header center teal-text">Ваш билет</h1>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{{play.image}}" alt="{{play.title}}">
+                        <span class="card-title">{{play.title}}</span>
+                    </div>
+                    <div class="card-content">
+                        <p>{{play.description}}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col s12 m6">
+                <div class="card teal lighten-5">
+                    <div class="card-content">
+                        <span class="card-title">Информация о билете</span>
+                        <ul class="collection">
+                            <li class="collection-item">
+                                <strong>Имя:</strong> {{ticket.name}}
+                            </li>
+                            <li class="collection-item">
+                                <strong>Возраст:</strong> {{ticket.age}}
+                            </li>
+                            {{#if ticket.comment}}
+                            <li class="collection-item">
+                                <strong>Комментарий:</strong> {{ticket.comment}}
+                            </li>
+                            {{/if}}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">Поделиться билетом</span>
+                        <p>Вы можете поделиться этим билетом, скопировав ссылку:</p>
+                    </div>
+                    <div class="card-action">
+                        <button id="copy-url-btn" class="btn waves-effect waves-light teal">
+                            Копировать URL
+                            <i class="material-icons right">content_copy</i>
+                        </button>
+                    </div>
+                </div>
+                
+                {{#if eligible}}
+                <div class="card green lighten-5">
+                    <div class="card-content">
+                        <span class="card-title">Успех!</span>
+                        <p>Вы можете посетить данное представление. Ваш билет подтвержден.</p>
+                        {{#if secret_word}}
+                        <p>При предъявлении билета назовите секретное слово: <span class="secret-word">{{secret_word}}</span></p>
+                        {{/if}}
+                    </div>
+                </div>
+                {{else}}
+                <div class="card orange lighten-5">
+                    <div class="card-content">
+                        <span class="card-title">Внимание!</span>
+                        <p class="age-warning">Данное представление могут посещать только лица старше 18 лет. Доступ запрещен.</p>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </script>
+    
+    <script type="text/template" id="error-template">
+        <div class="row">
+            <div class="col s12">
+                <h1 class="header center red-text">Ошибка</h1>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col s12">
+                <div class="card red lighten-5">
+                    <div class="card-content">
+                        <span class="card-title">Произошла ошибка</span>
+                        <p>{{error}}</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn waves-effect waves-light teal">На главную</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    
+    <script src="/js/app.js"></script>
+</body>
+</html> 

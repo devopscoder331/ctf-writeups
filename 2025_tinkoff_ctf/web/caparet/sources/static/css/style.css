@@ -1,0 +1,102 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.container {
+    width: 90%;
+}
+
+@media only screen and (max-width: 992px) {
+    .brand-logo {
+        font-size: 1.8rem !important;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h5 {
+        font-size: 1.2rem;
+    }
+    
+    .brand-logo {
+        font-size: 1.5rem !important;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.card .card-image .card-title {
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    padding: 10px;
+}
+
+.card .card-content {
+    min-height: 120px;
+}
+
+.input-field input:focus + label,
+.input-field textarea:focus + label {
+    color: #00897b !important;
+}
+
+.input-field input:focus,
+.input-field textarea:focus {
+    border-bottom: 1px solid #00897b !important;
+    box-shadow: 0 1px 0 0 #00897b !important;
+}
+
+#ticket-result {
+    margin-top: 2rem;
+}
+
+textarea#ticket-token {
+    min-height: 100px;
+    overflow-y: auto;
+}
+
+#copy-url-btn {
+    margin-top: 1rem;
+}
+
+.error-message {
+    color: #f44336;
+    margin-top: 5px;
+}
+
+.ticket-url-container {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    word-break: break-all;
+    overflow: hidden;
+}
+
+.ticket-url-container a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.secret-word {
+    font-weight: bold;
+    color: #00897b;
+}
+
+.age-warning {
+    font-weight: bold;
+    color: #ff9800;
+} 
