@@ -1,0 +1,10 @@
+services:
+  pwn_exam:
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    ports:
+      - 31178:9000
+    restart: on-failure
+    devices:
+      - /dev/kvm:/dev/kvm

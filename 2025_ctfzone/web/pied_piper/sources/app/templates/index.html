@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script><!-- -->
+    <section class="upload-section">
+        <h2 class="collapsible-title">Add New Song</h2>
+        <div class="collapsible-content">
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="song-title">Song Title</label>
+                    <input type="text" id="song-title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="song-artist">Artist</label>
+                    <input type="text" id="song-artist" name="artist" required>
+                </div>
+                
+                <div class="file-upload">
+                    <label for="audio-file" class="upload-label">
+                        <span class="upload-icon">+</span>
+                        <span class="upload-text">Choose audio file or drag here</span>
+                        <input type="file" id="audio-file" name="audio_file" accept="audio/*" required>
+                    </label>
+                </div>
+                
+                <div class="g-recaptcha"
+                    data-sitekey="6Ld08owrAAAAAJUU7haj4js2aHRcAcwlnO4cAft6"
+                    data-size="invisible"
+                    data-callback="onSubmit">
+                </div>
+
+                <button type="submit" class="submit-btn">Process & Add to Database</button>
+            </form>
+            <div class="upload-hint">
+                <p>Supported formats: MP3, WAV, OGG. We'll extract lyrics automatically.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="lyrics-library">
+        <div class="section-header">
+            <h2>Lyrics Library</h2>
+            <div class="search-box">
+                <input type="text" placeholder="Search songs or artists...">
+                <button class="search-btn">Search</button>
+            </div>
+        </div>
+
+        <div class="songs-grid">
+            {% for song in songs %}
+            <div class="song-card">
+                <div class="song-header">
+                    <h3 class="song-title">{{ song.title }}</h3>
+                    <p class="song-artist">{{ song.artist }}</p>
+                </div>
+                <div class="song-lyrics">
+                    <p>{{ song.lyrics[:100] }}...</p>
+                </div>
+                <button class="view-btn" data-id="{{ song.id }}">View Full Lyrics</button>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Modal Dialog -->
+    <div id="response-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-message"></div>
+        </div>
+    </div>
+{% endblock %}

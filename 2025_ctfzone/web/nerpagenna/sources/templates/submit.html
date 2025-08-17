@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Submit a Letter to Gennady{% endblock %}
+
+{% block content %}
+<div class="submit-section">
+    <h2>✉️ Submit a Letter to Gennady ✉️</h2>
+    
+    <div class="letter-info">
+        <p><strong>Gennady loves receiving letters from his fans!</strong></p>
+        <p>🐟 He can't read, but he appreciates the effort! 🐟</p>
+        <p>📝 Please submit your letter as a .docx file</p>
+    </div>
+    
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data" class="letter-form">
+            <div class="form-group">
+                <label for="author">👤 Your Name:</label>
+                <input type="text" id="author" name="author" required 
+                       placeholder="Enter your name (Gennady wants to know who you are!)"
+                       class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="title">📋 Letter Title:</label>
+                <input type="text" id="title" name="title" required 
+                       placeholder="Give your letter a catchy title!"
+                       class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="letter">📄 Your Letter (.docx file):</label>
+                <input type="file" id="letter" name="letter" required 
+                       accept=".docx"
+                       class="form-input">
+                <small>Gennady only accepts .docx files! (He's very picky about file formats)</small>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="submit-btn">
+                    🐟 Send Letter to Gennady! 🐟
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="letter-guidelines">
+        <h3>📋 Letter Guidelines</h3>
+        <ul>
+            <li>✅ Write about how much you love seals</li>
+            <li>✅ Tell Gennady about your day</li>
+            <li>✅ Ask him about his favorite fish</li>
+            <li>✅ Share your conservation efforts</li>
+            <li>❌ Don't mention pollution (he gets sad)</li>
+            <li>❌ Don't ask him to read your letter (he can't)</li>
+        </ul>
+    </div>
+    
+    <div class="sample-letter">
+        <h3>📝 Sample Letter</h3>
+        <div class="sample-content">
+            <p><strong>Dear Gennady,</strong></p>
+            <p>I hope you're having a wonderful day swimming in Lake Baikal! I wanted to write to tell you how much I admire your dedication to seal conservation.</p>
+            <p>Today I picked up trash at the beach and thought of you. You're such an inspiration to all of us!</p>
+            <p>What's your favorite type of fish? I bet it's salmon!</p>
+            <p>Keep being awesome, Gennady!</p>
+            <p><strong>Your biggest fan,<br>[Your Name]</strong></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .submit-section {
+        text-align: center;
+    }
+    
+    .letter-info {
+        background: #e6f3ff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .form-container {
+        background: #fff;
+        border: 3px solid #000;
+        border-radius: 10px;
+        padding: 30px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .form-group {
+        margin: 20px 0;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #000;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #000;
+        border-radius: 5px;
+        font-family: 'Comic Sans MS', cursive;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #ff0080;
+        box-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+    }
+    
+    .submit-btn {
+        background: linear-gradient(45deg, #ff0080, #00ff00);
+        color: #fff;
+        border: 3px solid #000;
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-family: 'Comic Sans MS', cursive;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+    
+    .submit-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    .letter-guidelines {
+        background: #fff3cd;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .letter-guidelines ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .letter-guidelines li {
+        margin: 10px 0;
+        padding: 5px;
+        background: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    
+    .sample-letter {
+        background: #f0f8ff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .sample-content {
+        background: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+        padding: 15px;
+        font-style: italic;
+    }
+    
+    .sample-content p {
+        margin: 10px 0;
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Moderation List - Pied Piper{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="moderation-container">
+        <div class="moderation-header">
+            <h1 class="moderation-title">Songs for Moderation</h1>
+            <div class="user-info">
+                Logged in as: <strong>{{ current_user.username }}</strong>
+            </div>
+        </div>
+        <table class="moderation-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs %}
+                <tr>
+                    <td>{{ song.title }}</td>
+                    <td>{{ song.artist }}</td>
+                    <td>
+                        <span class="moderation-status {% if song.is_moderated %}status-approved{% else %}status-pending{% endif %}">
+                            {% if song.is_moderated %}Approved{% else %}Pending{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('routes.moderation_item_view', id=song.id) }}" class="moderation-btn">
+                            Moderate
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">No songs awaiting moderation</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

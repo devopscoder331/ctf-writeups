@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Gennady the Baikal Seal - Home{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="under-construction">
+        <img src="https://web.archive.org/web/19961219003358im_/http://www.geocities.com/hollywood/4953/under_construction.gif" alt="Under Construction" style="width: 200px; height: auto;">
+        <p class="blink"><strong>🚧 UNDER CONSTRUCTION 🚧</strong></p>
+    </div>
+    
+    <div class="hero-image">
+        <img src="/static/gennady.jpg" alt="Gennady the Baikal Seal" style="max-width: 100%; height: auto; border: 5px solid #000; border-radius: 10px;">
+        <p><strong>Meet Gennady! The coolest seal on the internet!</strong></p>
+    </div>
+    
+    <div class="visit-counter">
+        <h2>🏆 Visitor Counter 🏆</h2>
+        <p class="blink"><strong>You are visitor #{{ visit_count }}! Gennady is judging you!</strong></p>
+        <p>🎉 Congratulations! You're part of Gennady's fan club! 🎉</p>
+    </div>
+    
+    <div class="ad-banner">
+        <img src="/static/ads/{{ current_ad }}" alt="Advertisement" style="max-width: 100%; height: auto;">
+        <p><strong>{% if current_ad == 'ad1.gif' %}GennadyCoin ICO! 100% SCAM!{% elif current_ad == 'ad2.gif' %}Click here to feed Gennady (DO NOT CLICK){% elif current_ad == 'ad3.gif' %}FREE FISH! (Just kidding){% elif current_ad == 'ad4.gif' %}Gennady's Seal School - Learn to Blub!{% endif %}</strong></p>
+        <a href="{{ url_for('index', ad=next_ad) }}" class="ad-next-btn">Следующий баннер &rarr;</a>
+    </div>
+    
+    <div class="fun-facts">
+        <h3>🌟 Fun Facts About Gennady 🌟</h3>
+        <ul>
+            <li>🐟 Gennady is 12 years old (probably)</li>
+            <li>🐟 He loves fish and hates pollution</li>
+            <li>🐟 He's the only seal with a Flask fan site</li>
+            <li>🐟 He can't read but loves receiving letters</li>
+            <li>🐟 His favorite color is fish-colored</li>
+        </ul>
+    </div>
+    
+    <div class="guestbook-preview">
+        <h3>📝 Latest Fan Letters 📝</h3>
+        <p>Check out what Gennady's fans are saying in the <a href="{{ url_for('archive') }}">Letter Archive</a>!</p>
+        <p>Or <a href="{{ url_for('submit_letter') }}">submit your own letter</a> to Gennady!</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        text-align: center;
+    }
+    
+    .under-construction {
+        margin: 20px 0;
+        padding: 15px;
+        background: #ffff00;
+        border: 3px solid #000;
+        border-radius: 10px;
+    }
+    
+    .hero-image {
+        margin: 30px 0;
+    }
+    
+    .visit-counter {
+        background: linear-gradient(45deg, #ff0080, #00ff00);
+        color: #fff;
+        padding: 20px;
+        border: 3px solid #000;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .fun-facts {
+        background: #e6f3ff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .fun-facts ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .fun-facts li {
+        margin: 10px 0;
+        padding: 5px;
+        background: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    
+    .guestbook-preview {
+        background: #fff3cd;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .guestbook-preview a {
+        color: #ff0080;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    
+    .guestbook-preview a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %} 

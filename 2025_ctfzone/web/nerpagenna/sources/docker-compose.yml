@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15
+    container_name: gennady_postgres
+    env_file: .env  
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  gennady:
+    build: .
+    container_name: gennady_baikal_seal
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./static:/app/static
+    env_file: .env  
+    environment:
+      - FLASK_ENV=${FLASK_ENV}
+      - DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - FLAG=${FLAG}
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+    driver: local

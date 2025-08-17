@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Song Moderation - Pied Piper{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setupModerationPage('{{ id }}');
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="song-detail-page">
+    <a href="{{ url_for('routes.moderation_list_view') }}" class="song-detail-back-btn">
+        Back to Moderation List
+    </a>
+    <div id="song-view">
+        <div class="song-detail-content-card">
+            <div class="song-detail-heading">
+                <h1 id="song-title" class="song-detail-title">Loading...</h1>
+                <p id="song-artist" class="song-detail-artist"></p>
+                <span id="status-badge" class="status-pending">Pending</span>
+            </div>
+
+            <div class="song-detail-content">
+                <h3>Lyrics:</h3>
+                <div id="lyrics-container" style="white-space: pre-wrap;">Loading song data...</div>
+            </div>
+
+            <div style="margin-top: 30px; display: flex; gap: 15px;">
+                <button id="approve-btn" 
+                        data-status="false"
+                        class="moderation-btn status-pending">
+                    Approve
+                </button>
+                <button id="edit-btn" class="moderation-btn">Edit</button>
+            </div>
+        </div>
+    </div>
+    <div id="edit-form" style="display: none;">
+        <div class="song-detail-content-card">
+            <div class="form-group">
+                <label for="edit-title">Title</label>
+                <input type="text" id="edit-title" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-artist">Artist</label>
+                <input type="text" id="edit-artist" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-lyrics">Lyrics</label>
+                <textarea id="edit-lyrics" class="form-control" rows="15"></textarea>
+            </div>
+            
+            <div style="margin-top: 20px; display: flex; gap: 15px;">
+                <button id="save-btn" class="moderation-btn">Save</button>
+                <button id="cancel-btn" class="moderation-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}About Gennady - The Baikal Seal{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <h2>ℹ️ About Gennady the Baikal Seal ℹ️</h2>
+    
+    <div class="gennady-intro">
+        <div class="gennady-photo">
+            <img src="/static/gennady.jpg" alt="Gennady the Baikal Seal" style="max-width: 300px; height: auto; border: 5px solid #000; border-radius: 10px;">
+        </div>
+        <div class="gennady-bio">
+            <h3>🌟 Meet Gennady! 🌟</h3>
+            <p><strong>Gennady is the coolest seal on the internet!</strong></p>
+            <p>🐟 He's a 12-year-old Baikal seal who loves fish, hates pollution, and runs the most amazing 90s-style website ever! 🐟</p>
+        </div>
+    </div>
+    
+    <div class="fun-facts">
+        <h3>🎉 Fun Facts About Gennady 🎉</h3>
+        <div class="facts-grid">
+            <div class="fact-card">
+                <h4>🐟 Age</h4>
+                <p>Gennady is 12 years old (probably)</p>
+            </div>
+            <div class="fact-card">
+                <h4>🐟 Favorite Food</h4>
+                <p>Fish! All kinds of fish!</p>
+            </div>
+            <div class="fact-card">
+                <h4>🐟 Hobbies</h4>
+                <p>Swimming, eating fish, judging visitors</p>
+            </div>
+            <div class="fact-card">
+                <h4>🐟 Special Talent</h4>
+                <p>He's the only seal with a Flask fan site!</p>
+            </div>
+            <div class="fact-card">
+                <h4>🐟 Reading Skills</h4>
+                <p>He can't read but loves receiving letters</p>
+            </div>
+            <div class="fact-card">
+                <h4>🐟 Favorite Color</h4>
+                <p>Fish-colored (whatever that means)</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="baikal-info">
+        <h3>🏞️ About Lake Baikal 🏞️</h3>
+        <p><strong>Lake Baikal</strong> is the world's deepest and oldest lake, located in Siberia, Russia.</p>
+        <ul>
+            <li>🌊 It contains 20% of the world's unfrozen freshwater</li>
+            <li>🐟 Home to over 2,500 species of animals</li>
+            <li>🏔️ Surrounded by beautiful mountains</li>
+            <li>❄️ Freezes in winter (Gennady loves ice fishing!)</li>
+        </ul>
+    </div>
+    
+    <div class="conservation-section">
+        <h3>🌍 Conservation Information 🌍</h3>
+        <p><strong>Baikal seals (Pusa sibirica)</strong> are the only freshwater seals in the world!</p>
+        
+        {% if seals_endangered %}
+        <div class="endangered-warning">
+            <h4 class="blink">⚠️ CONSERVATION ALERT ⚠️</h4>
+            <p><strong>Baikal seals are currently endangered!</strong></p>
+            <p>🐟 Threats include:</p>
+            <ul>
+                <li>❌ Pollution from industrial activities</li>
+                <li>❌ Climate change affecting their habitat</li>
+                <li>❌ Overfishing reducing their food supply</li>
+                <li>❌ Human disturbance</li>
+            </ul>
+            <p><strong>How you can help:</strong></p>
+            <ul>
+                <li>✅ Reduce plastic use</li>
+                <li>✅ Support conservation organizations</li>
+                <li>✅ Learn about and spread awareness</li>
+                <li>✅ Write to Gennady (he loves fan mail!)</li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="website-info">
+        <h3>💻 About This Website 💻</h3>
+        <p><strong>This is the most AMAZING seal website of the 90s!</strong></p>
+        <ul>
+            <li>🌟 Built with Flask and Python</li>
+            <li>🌟 Features authentic 90s web design</li>
+            <li>🌟 Includes visitor counter and fan mail system</li>
+            <li>🌟 DOCX to HTML conversion for letters</li>
+            <li>🌟 Random ad rotation (just like the old days!)</li>
+        </ul>
+        <p><em>Best viewed with Netscape Navigator 3.0 or Internet Explorer 4.0</em></p>
+    </div>
+    
+    <div class="contact-info">
+        <h3>📞 Contact Gennady 📞</h3>
+        <p><strong>Want to get in touch with Gennady?</strong></p>
+        <p>🐟 <a href="{{ url_for('submit_letter') }}">Submit a letter</a> - He loves fan mail!</p>
+        <p>📚 <a href="{{ url_for('archive') }}">Read other fan letters</a> in the archive</p>
+        <p>🏠 <a href="{{ url_for('index') }}">Go back home</a> to see Gennady's latest updates</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-section {
+        text-align: center;
+    }
+    
+    .gennady-intro {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        background: #e6f3ff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .gennady-photo {
+        flex-shrink: 0;
+    }
+    
+    .gennady-bio {
+        flex: 1;
+    }
+    
+    .gennady-bio h3 {
+        margin-top: 0;
+        color: #ff0080;
+    }
+    
+    .fun-facts {
+        background: #fff3cd;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .facts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .fact-card {
+        background: #fff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .fact-card h4 {
+        color: #ff0080;
+        margin-top: 0;
+    }
+    
+    .baikal-info {
+        background: #f0f8ff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .baikal-info ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .baikal-info li {
+        margin: 10px 0;
+        padding: 5px;
+        background: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    
+    .conservation-section {
+        background: #fff5f5;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .endangered-warning {
+        background: #ffebee;
+        border: 3px solid #f44336;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .endangered-warning h4 {
+        color: #f44336;
+        margin-top: 0;
+    }
+    
+    .endangered-warning ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .endangered-warning li {
+        margin: 10px 0;
+        padding: 5px;
+        background: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    
+    .website-info {
+        background: #e8f5e8;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .website-info ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .website-info li {
+        margin: 10px 0;
+        padding: 5px;
+        background: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    
+    .contact-info {
+        background: #fff3e0;
+        border: 2px solid #000;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .contact-info a {
+        color: #ff0080;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    
+    .contact-info a:hover {
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+        .gennady-intro {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .facts-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %} 

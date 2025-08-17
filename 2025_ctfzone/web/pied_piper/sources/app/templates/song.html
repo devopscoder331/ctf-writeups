@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="song-detail-page">
+    <a href="/" class="song-detail-back-btn">Back to all songs</a>
+    <div class="song-detail-content-card">
+        <div class="song-detail-heading">
+            <h1 class="song-detail-title">{{ song.title }}</h1>
+            <p class="song-detail-artist">{{ song.artist }}</p>
+        </div>
+        <div class="song-detail-content" style="white-space: pre-wrap;">{{ song.lyrics }}</div>
+    </div>
+</div>
+{% endblock %}
