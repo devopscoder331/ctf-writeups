@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.red.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"
+      integrity="sha256-wIRQlqfEpnQfNirFBslMHH0n3GA7zBv2Slh/dvLb46E="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      .journal-container {
+        background-color: rgb(28, 33, 44);
+        color: rgb(224, 227, 231);
+        border: 1px solid #2a3140;
+        min-height: 8rem;
+        border-radius: 0.25rem;
+        padding: 0.4rem 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+
+      textarea {
+        min-height: 8rem;
+      }
+
+      pre {
+        padding: 0.3rem 1rem;
+      }
+    </style>
+    <title>PSPD | {{title}}</title>
+    <style>
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+      header img {
+        filter: invert();
+        border-radius: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <img src="/static/pwnsec.webp" alt="" />
+        <h1>PwnSec Police Department (PSPD)</h1>
+        {% if user-id %}
+        <a href="/logout">
+          <button>Logout</button>
+        </a>
+        {% endif %}
+      </header>
+      <hgroup>
+        <h1>Welcome Agent,</h1>
+        <p>Welcome to the PwnSec Police Department (PSPD) Control Panel</p>
+      </hgroup>
+
+      <div id="userContainer" aria-busy="true">Loading...</div>
+      <script src="/static/js/clientsideUIDFallback.js"></script>
+      <script data-uid="{{user-id}}" src="static/js/loadUserData.js"></script>
+      <script>
+        let DOMPurifyConfig = {
+          // just enough for our basic journals
+          ALLOWED_TAGS: ["a", "b", "i", "ul", "ol", "li"],
+          FORBID_ATTR: ["name"],
+        };
+        let userDataElement = document.querySelector("#userContainer");
+
+        // polling user data because my scripts are not preserving order
+        // is it because of the async? 🤷‍♂️
+        let polls = 0;
+        let pollUserData = setInterval(async () => {
+          polls++;
+
+          if (polls > 20 || (userData && uid)) {
+            clearInterval(pollUserData);
+
+            userDataElement.removeAttribute("aria-busy");
+            userDataElement.innerText = "";
+
+            let userJournal = await (
+              await fetch(`/users/${uid}/journal`)
+            ).json();
+            console.log(userJournal);
+
+            // they told me its good for security 🤷
+            userJournal = userJournal.replace(/textarea/gi, "");
+
+            userDataElement.insertAdjacentHTML(
+              "afterbegin",
+              `
+            <h2>Edit Journal</h2>
+            <form method="POST" action="/users/{{user-id}}">
+            <label for="journal"></label>
+              <textarea id="journal" name="journal" type="text">${DOMPurify.sanitize(
+                userJournal,
+                DOMPurifyConfig
+              )}</textarea>
+              <button>Update</button>
+            </form>
+            `
+            );
+
+            userDataElement.insertAdjacentHTML(
+              "afterbegin",
+              `
+                <hgroup>
+                  <h2>Journal</h2>
+                  <h3>Agent's Incident Journal</h3>
+                  </hgroup>
+                  <div class="journal-container">${DOMPurify.sanitize(
+                    userJournal,
+                    DOMPurifyConfig
+                  )}</div>`
+            );
+
+            try {
+              const displayUserData = [
+                "id",
+                "username",
+                "password",
+                "is-admin",
+              ];
+              // gracefully populate userData dependent UI
+              let preEl = document.createElement("pre");
+              preEl.innerText =
+                `// userData - debug_id: ${
+                  (crypto?.randomUUID && crypto.randomUUID()) || NaN
+                }\n` +
+                JSON.stringify(userData, undefined, 2) +
+                "\n\n";
+
+              userDataElement.insertAdjacentElement("afterbegin", preEl);
+
+              userDataElement.insertAdjacentHTML(
+                "beforeend",
+                `<p style='margin-top: 3rem;'>Not agent <b>${decodeURIComponent(
+                  userData.username
+                )}</b>? Report this incident to +111-337-1337</p>`
+              );
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }, 100);
+      </script>
+    </main>
+  </body>
+</html>

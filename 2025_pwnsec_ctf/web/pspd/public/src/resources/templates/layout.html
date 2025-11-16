@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.red.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"
+      integrity="sha256-wIRQlqfEpnQfNirFBslMHH0n3GA7zBv2Slh/dvLb46E="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .error {
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        background-color: #ffbfbf;
+        border: 1px solid #860707;
+        color: #860707;
+        margin-bottom: 1rem;
+      }
+    </style>
+    <title>PSPD | {{title}}</title>
+    <style>
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+      header img {
+        filter: invert();
+        border-radius: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <img src="/static/pwnsec.webp" alt="" />
+        <h1>PwnSec Police Department (PSPD)</h1>
+        {% if user-id %}
+        <a href="/logout">
+          <button>Logout</button>
+        </a>
+        {% endif %}
+      </header>
+      {% block body %}Insert body here{% endblock %}
+    </main>
+  </body>
+</html>

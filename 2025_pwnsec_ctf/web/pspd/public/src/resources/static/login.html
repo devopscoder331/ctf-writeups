@@ -1,0 +1,56 @@
+{% extends "templates/layout.html" %} {% block body %}
+<h1>Login</h1>
+<div id="error" class="error hidden"></div>
+<form onsubmit="loginHandler" method="post" action="/users/signin">
+  <label for="username">Agent username</label>
+  <input
+    id="username"
+    name="username"
+    type="text"
+    placeholder="Enter your username..."
+  />
+
+  <label for="password">Password</label>
+  <input
+    id="password"
+    name="password"
+    type="password"
+    placeholder="Enter your password..."
+  />
+
+  <input type="submit" value="Login" />
+  <a href="/register">Not a PSPD member yet? Create an account here.</a>
+</form>
+<script>
+  document.forms[0].addEventListener("submit", loginHandler);
+
+  async function loginHandler(e) {
+    e.preventDefault();
+
+    try {
+      let res = await (
+        await fetch("/users/signin", {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          method: "POST",
+          body: new URLSearchParams({
+            username: document.forms[0].username.value,
+            password: document.forms[0].password.value,
+          }),
+        })
+      ).json();
+
+      if (res?.result === "error") {
+        document.getElementById("error").innerText = res["msg"];
+        document.getElementById("error").classList.remove("hidden");
+        return;
+      }
+
+      window.location = "/";
+    } catch (err) {
+      console.error(err);
+      document.getElementById("error").innerText = "Internal Server Error";
+      document.getElementById("error").classList.remove("hidden");
+    }
+  }
+</script>
+{% endblock %}
