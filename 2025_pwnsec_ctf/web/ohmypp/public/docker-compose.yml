@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  ohmypp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ctfae:ohmypp
+    container_name: ohmypp
+    ports:
+      - 3000:3000
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent -f http://127.0.0.1:3000/"]
+      interval: 5s
+      timeout: 30s
+      retries: 3
+    x-ctfae-challenge:
+      main: true
+      flag:
+        required: true
+        var_name: FLAG
+      type: "http"
+      cpus: 2048
+      memory: 2048M
+      deployment_type: "ecs"

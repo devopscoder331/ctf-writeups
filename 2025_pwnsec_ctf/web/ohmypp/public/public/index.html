@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OhMyPP Uploader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-200 min-h-screen flex items-center justify-center font-sans">
+
+  <div class="bg-white shadow-xl rounded-2xl w-full max-w-md p-6 border border-slate-200">
+    <h2 class="text-2xl font-semibold text-center text-slate-800 mb-4">📤 Upload a File</h2>
+
+    <form id="uploadForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Choose File</label>
+        <input type="file" id="fileInput" class="block w-full text-sm border border-slate-300 rounded-lg p-2 focus:ring focus:ring-indigo-200 focus:border-indigo-400 outline-none" required>
+      </div>
+
+      <button type="submit" class="w-full py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-lg transition-all">Upload</button>
+    </form>
+
+    <div id="log" class="text-sm text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg p-3 mt-4 break-words hidden"></div>
+
+    <div class="text-center mt-4">
+      <a href="/report" class="text-indigo-500 hover:text-indigo-600 text-sm font-medium">Go to Report Page →</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const log = document.getElementById('log');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return show('❌ Please choose a file first.');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      show('⏳ Uploading...');
+
+      try {
+        const res = await fetch('/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          show(`✅ Uploaded!<br>URL: <a href="${data.url}" target="_blank" class="text-indigo-600 underline">${data.url}</a>`);
+        } else show(`❌ ${data.error || 'upload failed'}`);
+      } catch (err) {
+        show(`❌ ${err.message}`);
+      }
+    });
+
+    function show(msg) {
+      log.innerHTML = msg;
+      log.classList.remove('hidden');
+    }
+  </script>
+
+</body>
+</html>
