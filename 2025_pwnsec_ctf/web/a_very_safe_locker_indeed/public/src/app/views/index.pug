@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  .container.mt-5
+    .row
+      .col-md-12.text-center
+        h1 Welcome to E-Banking
+        p Lead your finances securely and efficiently with our simple-to-use platform.
+      
+      .col-md-12.text-center
+        if !user
+          .btn-group
+            a.btn.btn-primary.btn-lg(href='/register') Get Started
+            a.btn.btn-secondary.btn-lg.ml-3(href='/login') Already a Member? Login
+        else
+          .card.mt-3
+            .card-header
+              h3 Account Overview
+            .card-body
+              h5 Account ID: 
+              h4
+                span.badge.bg-info.text-wrap #{user.id}
+              h5.mt-3 Current Balance: 
+              h4
+                span.badge.bg-success.text-wrap $#{balance}
+
+            .card-footer
+              h4 Transfer Funds
+              form(action='/transfer', method='POST')
+                .form-group
+                  label(for='receiverEmail') Receiver's Information
+                  input.form-control(name='receiverInfo', placeholder='Enter receiver email or account ID', required)
+                .form-group.mt-3
+                  label(for='amount') Amount
+                  input.form-control(type='number', name='amount', min='1', placeholder='Enter amount', required)
+                button.btn.btn-primary.mt-4.w-100(type='submit') Transfer Funds 
+              if failMessage
+                .alert.alert-danger.text-center.mt-4= failMessage
+              if successMessage
+                .alert.alert-success.text-center.mt-4 !{successMessage}
+              .alert.alert-warning.text-left.mt-4
+                ul
+                  li A 1% fee is applied to all transfers.
+                  li If the balance does not cover the transfer and fee, the transaction will be rejected.
+                  li The user is responsible for the validity of the receiver's information.
+                  li Transfers to non-existent receivers result in a processing fee.
+                  li The processing fee is proportionate to the attempted transfer amount with a maximum of $100.

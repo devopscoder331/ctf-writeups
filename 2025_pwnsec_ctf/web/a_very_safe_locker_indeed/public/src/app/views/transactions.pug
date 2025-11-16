@@ -1,0 +1,82 @@
+extends layout
+
+block content
+  .container
+    h2 Transaction History
+    form(action='/transactions/search', method='GET')
+      .form-group
+        label(for='searchTerm') Search Transactions
+        input#searchTerm(type='text', name='searchTerm', placeholder='Enter the transaction ID or the account ID linked to your preferred transaction(s)', required autocomplete='off')
+        ul#autocomplete-list.autocomplete-list
+      button#transactionSearch.btn-primary.w-100(type='submit') Search
+
+    if transactions.length > 0
+      table.transaction-table
+        tr
+          th ID
+          th Date
+          th From
+          th To
+          th Type
+          th Amount
+        each transaction in transactions
+          tr
+            td= transaction._id
+            td= new Date(transaction.date).toLocaleDateString()
+            if transaction.user_from._id == user.id
+              td= 'You'
+            else
+              td
+                | #{transaction.user_from._id}
+                br
+                | (#{transaction.user_from.firstName} #{transaction.user_from.lastName})
+            if transaction.user_to._id == user.id
+              td= 'You'
+            else
+              td
+                | #{transaction.user_to._id}
+                br
+                | (#{transaction.user_to.firstName} #{transaction.user_to.lastName})
+            td= transaction.type
+            td.amount= `$${transaction.amount.toFixed(2)}`
+    else
+      p No transactions recorded.
+
+    script(nonce=''+nonce).
+      document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchTerm');
+        const autocompleteList = document.getElementById('autocomplete-list');
+
+        searchInput.addEventListener('input', function() {
+          const query = this.value;
+
+          // Clear previous autocomplete suggestions
+          autocompleteList.innerHTML = '';
+
+          if (query.length > 0) {
+            fetch('/api/search-history/autocomplete/#{user.id}?limit=10')
+              .then(response => response.json())
+              .then(data => {
+                const filteredSuggestions = data.filter(term => term.toLowerCase().includes(query.toLowerCase()));
+                
+                filteredSuggestions.forEach(term => {
+                  const li = document.createElement('li');
+                  li.textContent = term;
+                  li.onclick = function() {
+                    searchInput.value = term; // Set input value to the selected suggestion
+                    autocompleteList.innerHTML = ''; // Clear suggestions
+                  };
+                  autocompleteList.appendChild(li);
+                });
+              })
+              .catch(err => console.error(err));
+          }
+        });
+
+        // Hide autocomplete suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+          if (e.target !== searchInput) {
+            autocompleteList.innerHTML = '';
+          }
+        });
+      });

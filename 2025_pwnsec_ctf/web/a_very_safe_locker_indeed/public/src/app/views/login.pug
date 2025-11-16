@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  .container
+    h2 Login to Your Account
+    form(action='/login', method='POST')
+      if error
+        p.error= error
+      .form-group
+        label(for='email') Email Address
+        input(type='email', name='email', placeholder='Enter your email', required)
+      .form-group
+        label(for='password') Password
+        input(type='password', name='password', placeholder='Enter your password', required)
+      button.btn-primary.w-100.mb-3(type='submit') Login
+    p Don't have an account yet? 
+      a(href='/register') Register here

@@ -1,0 +1,226 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.navbar {
+  background-color: #1f4e79;
+  padding: 1rem 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+.navbar a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+}
+.container {
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+a {
+  color: #1f4e79;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+button,
+.btn-primary,
+.btn-secondary {
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-primary {
+  background-color: #1f4e79;
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #163d5d;
+  border-color: #163d5d;
+}
+.btn-secondary {
+  background-color: #f1f1f1;
+  color: #1f4e79;
+}
+input {
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+input#searchTerm {
+  margin-bottom: 0;
+}
+footer {
+  background-color: #1f4e79;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  margin-top: auto;
+  width: 100%;
+}
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+  text-align: left;
+}
+.transaction-table th,
+.transaction-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+.transaction-table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+.transaction-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.transaction-table tr:hover {
+  background-color: #f1f1f1;
+}
+.transaction-table td {
+  font-weight: 300;
+}
+.transaction-table td:first-child {
+  font-weight: bold;
+}
+.transaction-table td:last-child {
+  color: #2e7d32;
+}
+.transaction-table td.amount {
+  color: #ff5252;
+}
+.autocomplete-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+}
+.autocomplete-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+.autocomplete-list li:hover {
+  background-color: #f4f4f4;
+}
+.locker-container,
+.customize-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.locker-card,
+.customize-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+.locker {
+  width: 300px;
+  height: 200px;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #eaeaea;
+  border: 4px solid #000;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+#lockerPreview {
+  background-color: #00ff88ff;
+  border-style: solid;
+  color: #000000;
+  border-width: 2px;
+  border-color: #000;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.top-0 {
+  top: 0;
+}
+.end-0 {
+  right: 0;
+}
+#lockerPreview svg {
+  width: 10rem;
+  transition: color 0.3s, transform 0.3s;
+}
+#lockerPreview:hover svg {
+  transform: scale(1.1);
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+input[type='color'],
+select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.success-message {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}
+@media (max-width: 768px) {
+  .locker,
+  .customize-card {
+    width: 100%;
+    height: auto;
+  }
+}
+p.master-alert span.sensitive-info:nth-child(even) {
+  background-color: #ffa07a;
+  color: #5a3e36;
+}
+p.master-alert span.sensitive-info:nth-child(odd) {
+  background-color: #ff6f61;
+  color: #f5f5f5;
+}

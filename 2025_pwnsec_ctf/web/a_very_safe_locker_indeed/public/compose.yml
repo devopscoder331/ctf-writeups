@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  node:
+    build: .
+    environment:
+      PORT: 80
+      COOKIE_PARSER_SECRET: test_secret
+      BANK_MASTER_PASSWORD: test_password
+      FLAG: flag{fake_flag}
+    ports:
+      - 80:80
+  mongo:
+    image: mongo:7-jammy
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: pass
+  bot:
+    build:
+      context: ./src/bot/
+      args:
+        - BROWSER=chromium
+    restart: always
+    environment:
+      APPNAME: Admin
+      APPURL: http://node/
+      APPFLAG: fake_flag
+      APPLIMIT: 2
+      APPLIMITTIME: 60
+      USE_PROXY: 1
+      DISPLAY: ${DISPLAY}
+      BANK_MASTER_PASSWORD: test_password
+    # uncoment this if you need to run the bot in GUI mode
+    # run this before running the docker container if you're use xauth `sudo xhost +local:docker`
+    # volumes:
+    # - /tmp/.X11-unix:/tmp/.X11-unix

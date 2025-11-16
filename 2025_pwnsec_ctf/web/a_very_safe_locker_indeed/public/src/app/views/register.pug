@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  .container
+    h2 Create a New Account
+    form(action='/register', method='POST')
+      .form-group
+        label(for='firstName') First Name
+        input(type='text', name='firstName', placeholder='First Name', required)
+      .form-group
+        label(for='lastName') Last Name
+        input(type='text', name='lastName', placeholder='Last Name', required)
+      .form-group
+        label(for='phoneNumber') Phone Number
+        input(type='text', name='phoneNumber', placeholder='Phone Number', required)
+      .form-group
+        label(for='email') Email Address
+        input(type='email', name='email', placeholder='Email', required)
+      .form-group
+        label(for='password') Password
+        input(type='password', name='password', placeholder='Create a Password', required)
+      button.btn-primary.w-100.mb-3(type='submit') Register
+    p Already have an account? 
+      a(href='/login') Login here

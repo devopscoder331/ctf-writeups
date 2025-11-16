@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .container
+    if successMessage
+      .alert.alert-success= successMessage
+    if errorMessage
+      .alert.alert-danger= errorMessage
+
+    h2 Your Profile
+    form(action='/profile', method='POST')
+      .form-group
+        label(for='firstName') First Name
+        input(type='text', name='firstName', placeholder='First Name', required, value=(user && user.firstName) ? user.firstName : '')
+      .form-group
+        label(for='lastName') Last Name
+        input(type='text', name='lastName', placeholder='Last Name', required, value=(user && user.lastName) ? user.lastName : '')
+      .form-group
+        label(for='phoneNumber') Phone Number
+        input(type='text', name='phoneNumber', placeholder='Phone Number', required, value=(user && user.phoneNumber) ? user.phoneNumber : '')
+      .form-group
+        label(for='email') Email Address
+        input(type='email', name='email', placeholder='Email', required, value=(user && user.email) ? user.email : '')
+      p.text-muted Password changes are not allowed through this page.
+      button.btn-primary.w-100.mb-3(type='submit') Save Changes
+    p
+      a(href='/') Back to Home
