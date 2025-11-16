@@ -1,0 +1,7 @@
+version: "3"
+services:
+  challenge:
+    build: .
+    image: pwn-web-app
+    ports:
+      - "5000:5000"
