@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SecureNotes{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-8">
+        <!-- Create Note Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Create New Note</h4>
+                <p class="text-muted mb-0">Add a new note to your collection</p>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('create_note') }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Content</label>
+                        <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Note</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notes Display Section -->
+        <div class="card">
+            <div class="card-header">
+                <h4>My Notes</h4>
+                <p class="text-muted mb-0">Your personal notes collection</p>
+            </div>
+            <div class="card-body">
+                {% if notes %}
+                    {% for note in notes %}
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5>{{ note.title }}</h5>
+                            <small class="text-muted">ID: {{ note.id }}</small>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ note.content[:100] }}{% if note.content|length > 100 %}...{% endif %}</p>
+                            <a href="{{ url_for('view_note', note_id=note.id) }}" class="btn btn-sm btn-outline-primary">View Note</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">You don't have any notes yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+        <!-- Report Note Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Report a Note</h4>
+                <p class="text-muted mb-0">Report inappropriate content for review</p>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('report_note') }}">
+                    <div class="mb-3">
+                        <label for="note_id" class="form-label">Select Note to Report</label>
+                        <select class="form-control" id="note_id" name="note_id" required>
+                            <option value="">Choose a note...</option>
+                            {% for note in all_notes %}
+                            <option value="{{ note.id }}">
+                                {{ note.title }}
+                                {% if note.username %} (by {{ note.username }}){% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">Select a note that violates our community guidelines</div>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Report Note</button>
+                </form>
+                
+                <div class="mt-3">
+                    <small class="text-muted">
+                        <strong>Note:</strong><br>
+                        Reported notes will be reviewed by our moderation team.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Account Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Username:</strong> {{ username }}</p>
+                <p><strong>Notes:</strong> {{ notes|length }} created</p>
+                {% if is_admin %}
+                    <p><strong>Role:</strong> <span class="text-warning">Administrator</span></p>
+                    {% if flag %}
+                        <p><strong>Flag:</strong> <span class="text-success">{{ flag }}</span></p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Basic functionality for the dashboard
+console.log('SecureNotes Dashboard loaded');
+</script>
+{% endblock %}

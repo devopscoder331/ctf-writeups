@@ -1,0 +1,41 @@
+[entryPoints]
+  [entryPoints.web]
+    address = ":7598"
+
+[providers]
+  [providers.file]
+    filename = "/traefik/config.toml"
+
+[http]
+  [http.routers]
+    
+    # Block all requests to /report_note endpoint - still in beta so restricting access
+    [http.routers.flask-router-report-deny]
+      entryPoints = ["web"]
+      rule = "PathPrefix(`/report_note`) && (Method(`GET`) || Method(`POST`))"
+      priority = 10
+      middlewares = ["block-access"]
+      service = "flask-service"
+    
+    # Main router for Flask frontend
+    [http.routers.flask-router]
+      entryPoints = ["web"]
+      rule = "PathPrefix(`/`)"
+      priority = 1
+      service = "flask-service"
+
+  [http.middlewares]
+    [http.middlewares.block-access.replacePathRegex]
+      regex = ".*"
+      replacement = "/blocked"
+
+  [http.services]
+    [http.services.flask-service]
+      [http.services.flask-service.loadBalancer]
+        [[http.services.flask-service.loadBalancer.servers]]
+          url = "http://127.0.0.1:5000"
+
+[log]
+  level = "DEBUG"
+
+[accessLog]

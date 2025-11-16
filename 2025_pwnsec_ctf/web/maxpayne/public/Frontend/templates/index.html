@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Home - SecureNotes{% endblock %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-md-8 mx-auto text-center">
+        <div class="jumbotron bg-white p-5 rounded shadow">
+            <h1 class="display-4">Welcome to SecureNotes</h1>
+            <p class="lead">Your secure, personal note-taking application.</p>
+            <hr class="my-4">
+            <p>Store, organize, and access your notes securely from anywhere. Keep your thoughts, ideas, and important information safe and organized.</p>
+            
+            {% if not session.logged_in %}
+                <div class="mt-4">
+                    <a class="btn btn-primary btn-lg me-3" href="{{ url_for('login') }}" role="button">Login</a>
+                    <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('register') }}" role="button">Register</a>
+                </div>
+            {% else %}
+                <div class="mt-4">
+                    <a class="btn btn-success btn-lg" href="{{ url_for('dashboard') }}" role="button">Go to Dashboard</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">🔒 Secure Storage</h5>
+                <p class="card-text">Your notes are stored securely with modern encryption and authentication systems.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">📝 Easy to Use</h5>
+                <p class="card-text">Simple, intuitive interface that makes creating and managing notes effortless.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">🌐 Access Anywhere</h5>
+                <p class="card-text">Access your notes from any device with our responsive web application.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

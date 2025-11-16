@@ -1,0 +1,15 @@
+services:
+  maxpayne:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pwnsec:maxpayne
+    container_name: maxpayne
+    ports:
+      - 7598
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent -f http://127.0.0.1:7598/"]
+      interval: 5s
+      timeout: 30s
+      retries: 3
